@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Race/Ethnicity Distribution - SVG Chart</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #1e1b2e 0%, #2d1b3d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 900px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            text-align: center;
+            color: #fce7f3;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .bar {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            filter: brightness(1.2);
+        }
+
+        .axis-label {
+            fill: #d8b4fe;
+            font-size: 14px;
+        }
+
+        .category-label {
+            fill: #e9d5ff;
+            font-size: 15px;
+            font-weight: 500;
+        }
+
+        .value-label {
+            fill: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            border: 1px solid rgba(236, 72, 153, 0.5);
+            font-size: 14px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <h2 class="chart-title">Preterm Birth Rate by Race/Ethnicity (2012)</h2>
+        
+        <svg viewBox="0 0 800 450" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid lines -->
+            <line x1="280" y1="50" x2="280" y2="380" stroke="rgba(148, 163, 184, 0.2)" stroke-width="2"/>
+            <line x1="280" y1="380" x2="750" y2="380" stroke="rgba(148, 163, 184, 0.2)" stroke-width="2"/>
+            
+            <!-- Vertical grid lines -->
+            <line x1="350" y1="50" x2="350" y2="380" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            <line x1="470" y1="50" x2="470" y2="380" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            <line x1="590" y1="50" x2="590" y2="380" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            <line x1="710" y1="50" x2="710" y2="380" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            
+            <!-- X-axis labels -->
+            <text x="280" y="400" text-anchor="middle" class="axis-label">0%</text>
+            <text x="400" y="400" text-anchor="middle" class="axis-label">0.5%</text>
+            <text x="520" y="400" text-anchor="middle" class="axis-label">1.0%</text>
+            <text x="640" y="400" text-anchor="middle" class="axis-label">1.5%</text>
+            <text x="750" y="400" text-anchor="middle" class="axis-label">2.0%</text>
+            
+            <!-- Bar 1: White - 1.2% (554 cases) -->
+            <text x="270" y="100" text-anchor="end" class="category-label">White</text>
+            <g class="bar" data-race="White" data-rate="1.2" data-count="554">
+                <rect x="280" y="80" width="288" height="40" fill="#fcd34d" rx="8"/>
+                <text x="580" y="105" text-anchor="start" class="value-label">1.2% (554)</text>
+            </g>
+            
+            <!-- Bar 2: Hispanic/Latino - 1.4% (107 cases) -->
+            <text x="270" y="170" text-anchor="end" class="category-label">Hispanic/Latino</text>
+            <g class="bar" data-race="Hispanic/Latino" data-rate="1.4" data-count="107">
+                <rect x="280" y="150" width="336" height="40" fill="#fdba74" rx="8"/>
+                <text x="628" y="175" text-anchor="start" class="value-label">1.4% (107)</text>
+            </g>
+            
+            <!-- Bar 3: White, non-Hispanic - 1.1% (440 cases) -->
+            <text x="270" y="240" text-anchor="end" class="category-label">White, non-Hispanic</text>
+            <g class="bar" data-race="White, non-Hispanic" data-rate="1.1" data-count="440">
+                <rect x="280" y="220" width="264" height="40" fill="#fcd34d" rx="8"/>
+                <text x="556" y="245" text-anchor="start" class="value-label">1.1% (440)</text>
+            </g>
+            
+            <!-- Bar 4: Asian/Pacific Islander - 1.1% (21 cases) -->
+            <text x="270" y="310" text-anchor="end" class="category-label">Asian/Pacific Islander</text>
+            <g class="bar" data-race="Asian/Pacific Islander" data-rate="1.1" data-count="21">
+                <rect x="280" y="290" width="264" height="40" fill="#fcd34d" rx="8"/>
+                <text x="556" y="315" text-anchor="start" class="value-label">1.1% (21)</text>
+            </g>
+            
+            <!-- Axis title -->
+            <text x="515" y="435" text-anchor="middle" class="axis-label" font-size="16" font-weight="600">Preterm Birth Rate (%)</text>
+        </svg>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const tooltip = document.getElementById('tooltip');
+        const bars = document.querySelectorAll('.bar');
+
+        bars.forEach(bar => {
+            bar.addEventListener('mouseenter', (e) => {
+                const race = bar.dataset.race;
+                const rate = bar.dataset.rate;
+                const count = bar.dataset.count;
+                
+                tooltip.innerHTML = `
+                    <strong>${race}</strong><br>
+                    Rate: ${rate}%<br>
+                    Cases: ${count}
+                `;
+                tooltip.classList.add('show');
+            });
+
+            bar.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.pageX + 10 + 'px';
+                tooltip.style.top = e.pageY + 10 + 'px';
+            });
+
+            bar.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // Animate bars on load
+        window.addEventListener('load', () => {
+            bars.forEach((bar, index) => {
+                const rect = bar.querySelector('rect');
+                const originalWidth = rect.getAttribute('width');
+                
+                rect.setAttribute('width', '0');
+                
+                setTimeout(() => {
+                    rect.style.transition = 'width 0.8s ease-out';
+                    rect.setAttribute('width', originalWidth);
+                }, index * 150);
+            });
+        });
+    </script>
+</body>
+</html>
