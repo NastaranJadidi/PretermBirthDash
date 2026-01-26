@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Age Distribution - SVG Bar Chart</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #1e1b2e 0%, #2d1b3d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .chart-container {
+            width: 100%;
+            max-width: 800px;
+            background: rgba(30, 41, 59, 0.5);
+            border: 1px solid rgba(148, 163, 184, 0.1);
+            border-radius: 16px;
+            padding: 2rem;
+        }
+
+        .chart-title {
+            text-align: center;
+            color: #fce7f3;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+        }
+
+        svg {
+            width: 100%;
+            height: auto;
+        }
+
+        .bar {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .bar:hover {
+            filter: brightness(1.2);
+        }
+
+        .axis-label {
+            fill: #d8b4fe;
+            font-size: 14px;
+        }
+
+        .value-label {
+            fill: white;
+            font-size: 16px;
+            font-weight: 600;
+        }
+
+        .tooltip {
+            position: absolute;
+            background: rgba(15, 23, 42, 0.95);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 8px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            border: 1px solid rgba(236, 72, 153, 0.5);
+            font-size: 14px;
+        }
+
+        .tooltip.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <div class="chart-container">
+        <h2 class="chart-title">Preterm Birth Rate by Maternal Age (2012)</h2>
+        
+        <svg viewBox="0 0 700 450" xmlns="http://www.w3.org/2000/svg">
+            <!-- Grid lines -->
+            <line x1="100" y1="50" x2="100" y2="350" stroke="rgba(148, 163, 184, 0.2)" stroke-width="2"/>
+            <line x1="100" y1="350" x2="650" y2="350" stroke="rgba(148, 163, 184, 0.2)" stroke-width="2"/>
+            
+            <!-- Horizontal grid lines -->
+            <line x1="100" y1="50" x2="650" y2="50" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            <line x1="100" y1="125" x2="650" y2="125" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            <line x1="100" y1="200" x2="650" y2="200" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            <line x1="100" y1="275" x2="650" y2="275" stroke="rgba(148, 163, 184, 0.1)" stroke-width="1" stroke-dasharray="5,5"/>
+            
+            <!-- Y-axis labels -->
+            <text x="85" y="355" text-anchor="end" class="axis-label">0%</text>
+            <text x="85" y="280" text-anchor="end" class="axis-label">0.5%</text>
+            <text x="85" y="205" text-anchor="end" class="axis-label">1.0%</text>
+            <text x="85" y="130" text-anchor="end" class="axis-label">1.5%</text>
+            <text x="85" y="55" text-anchor="end" class="axis-label">2.0%</text>
+            
+            <!-- Bars - Age 15-19: 1.4% (35 cases) -->
+            <g class="bar" data-age="15-19" data-rate="1.4" data-count="35">
+                <rect x="130" y="140" width="70" height="210" fill="#fcd34d" rx="8"/>
+                <text x="165" y="125" text-anchor="middle" class="value-label">1.4%</text>
+            </g>
+            <text x="165" y="375" text-anchor="middle" class="axis-label">15-19</text>
+            
+            <!-- Bars - Age 20-24: 0.9% (110 cases) -->
+            <g class="bar" data-age="20-24" data-rate="0.9" data-count="110">
+                <rect x="220" y="215" width="70" height="135" fill="#6ee7b7" rx="8"/>
+                <text x="255" y="200" text-anchor="middle" class="value-label">0.9%</text>
+            </g>
+            <text x="255" y="375" text-anchor="middle" class="axis-label">20-24</text>
+            
+            <!-- Bars - Age 25-29: 1.0% (185 cases) -->
+            <g class="bar" data-age="25-29" data-rate="1.0" data-count="185">
+                <rect x="310" y="200" width="70" height="150" fill="#6ee7b7" rx="8"/>
+                <text x="345" y="185" text-anchor="middle" class="value-label">1.0%</text>
+            </g>
+            <text x="345" y="375" text-anchor="middle" class="axis-label">25-29</text>
+            
+            <!-- Bars - Age 30-34: 1.3% (172 cases) -->
+            <g class="bar" data-age="30-34" data-rate="1.3" data-count="172">
+                <rect x="400" y="155" width="70" height="195" fill="#fcd34d" rx="8"/>
+                <text x="435" y="140" text-anchor="middle" class="value-label">1.3%</text>
+            </g>
+            <text x="435" y="375" text-anchor="middle" class="axis-label">30-34</text>
+            
+            <!-- Bars - Age 35-39: 1.6% (80 cases) -->
+            <g class="bar" data-age="35-39" data-rate="1.6" data-count="80">
+                <rect x="490" y="110" width="70" height="240" fill="#fdba74" rx="8"/>
+                <text x="525" y="95" text-anchor="middle" class="value-label">1.6%</text>
+            </g>
+            <text x="525" y="375" text-anchor="middle" class="axis-label">35-39</text>
+            
+            <!-- Bars - Age 40+: 2.1% (20 cases) -->
+            <g class="bar" data-age="40+" data-rate="2.1" data-count="20">
+                <rect x="580" y="35" width="70" height="315" fill="#fca5a5" rx="8"/>
+                <text x="615" y="20" text-anchor="middle" class="value-label">2.1%</text>
+            </g>
+            <text x="615" y="375" text-anchor="middle" class="axis-label">40+</text>
+            
+            <!-- Axis titles -->
+            <text x="375" y="410" text-anchor="middle" class="axis-label" font-size="16" font-weight="600">Maternal Age Group</text>
+            <text x="30" y="200" text-anchor="middle" class="axis-label" font-size="16" font-weight="600" transform="rotate(-90 30 200)">Preterm Birth Rate (%)</text>
+        </svg>
+    </div>
+
+    <div class="tooltip" id="tooltip"></div>
+
+    <script>
+        const tooltip = document.getElementById('tooltip');
+        const bars = document.querySelectorAll('.bar');
+
+        bars.forEach(bar => {
+            bar.addEventListener('mouseenter', (e) => {
+                const age = bar.dataset.age;
+                const rate = bar.dataset.rate;
+                const count = bar.dataset.count;
+                
+                tooltip.innerHTML = `
+                    <strong>Age ${age}</strong><br>
+                    Rate: ${rate}%<br>
+                    Cases: ${count}
+                `;
+                tooltip.classList.add('show');
+            });
+
+            bar.addEventListener('mousemove', (e) => {
+                tooltip.style.left = e.pageX + 10 + 'px';
+                tooltip.style.top = e.pageY + 10 + 'px';
+            });
+
+            bar.addEventListener('mouseleave', () => {
+                tooltip.classList.remove('show');
+            });
+        });
+
+        // Animate bars on load
+        window.addEventListener('load', () => {
+            bars.forEach((bar, index) => {
+                const rect = bar.querySelector('rect');
+                const originalHeight = rect.getAttribute('height');
+                const originalY = rect.getAttribute('y');
+                
+                rect.setAttribute('height', '0');
+                rect.setAttribute('y', '350');
+                
+                setTimeout(() => {
+                    rect.style.transition = 'all 0.8s ease-out';
+                    rect.setAttribute('height', originalHeight);
+                    rect.setAttribute('y', originalY);
+                }, index * 100);
+            });
+        });
+    </script>
+</body>
+</html>
