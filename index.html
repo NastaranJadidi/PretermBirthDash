@@ -15,8 +15,8 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: #1a1a1a;
-            color: white;
+            background: linear-gradient(135deg, #e9d5ff 0%, #ddd6fe 50%, #c4b5fd 100%);
+            color: #1f2937;
             overflow-x: hidden;
         }
 
@@ -28,51 +28,98 @@
 
         /* Header */
         .dashboard-header {
-            background: #2a2a2a;
+            background: linear-gradient(135deg, #c084fc 0%, #a78bfa 100%);
             padding: 1.5rem 2rem;
-            border-bottom: 2px solid #3a3a3a;
+            border-bottom: 2px solid #9333ea;
             display: flex;
             justify-content: space-between;
             align-items: center;
+            box-shadow: 0 4px 6px rgba(147, 51, 234, 0.2);
         }
 
         .title-section h1 {
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
+            color: white;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .title-section p {
-            color: #999;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 0.9rem;
+        }
+
+        .year-control-wrapper {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-end;
+            gap: 0.5rem;
+        }
+
+        .interaction-hint {
+            font-size: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            color: #fde047;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        .interaction-hint::before,
+        .interaction-hint::after {
+            content: '→';
+            font-size: 0.9rem;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.7; }
         }
 
         .year-control {
             display: flex;
             align-items: center;
             gap: 1rem;
+            background: rgba(255, 255, 255, 0.2);
+            padding: 0.75rem 1.5rem;
+            border-radius: 12px;
+            backdrop-filter: blur(10px);
         }
 
         .year-control label {
-            color: #ccc;
+            color: white;
             font-size: 0.95rem;
             font-weight: 600;
         }
 
         .year-control select {
             padding: 0.5rem 1.5rem;
-            background: #3a3a3a;
-            border: 1px solid #555;
-            border-radius: 6px;
-            color: white;
+            background: white;
+            border: 2px solid #9333ea;
+            border-radius: 8px;
+            color: #6b21a8;
             font-size: 1rem;
+            font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
+            box-shadow: 0 2px 4px rgba(147, 51, 234, 0.2);
         }
 
         .year-control select:hover {
-            background: #4a4a4a;
-            border-color: #666;
+            background: #faf5ff;
+            border-color: #7c3aed;
+            transform: translateY(-1px);
+            box-shadow: 0 4px 6px rgba(147, 51, 234, 0.3);
+        }
+
+        .year-control select:focus {
+            outline: none;
+            border-color: #7c3aed;
+            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
         }
 
         /* Main Content */
@@ -85,19 +132,20 @@
 
         /* Left Side - Map */
         .map-section {
-            background: #242424;
-            border-right: 2px solid #3a3a3a;
+            background: rgba(255, 255, 255, 0.9);
+            border-right: 2px solid #c084fc;
             padding: 2rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
+            box-shadow: 4px 0 6px rgba(147, 51, 234, 0.1);
         }
 
         .map-title {
             font-size: 1.2rem;
             font-weight: 600;
             margin-bottom: 1.5rem;
-            color: #fff;
+            color: #6b21a8;
         }
 
         .map-container {
@@ -107,20 +155,24 @@
             justify-content: center;
             position: relative;
             min-height: 400px;
+            background: rgba(167, 139, 250, 0.1);
+            border-radius: 12px;
+            padding: 1rem;
         }
 
         .map-legend {
             margin-top: 1.5rem;
             padding: 1rem;
-            background: #2a2a2a;
+            background: rgba(167, 139, 250, 0.15);
             border-radius: 8px;
+            border: 1px solid #c084fc;
         }
 
         .legend-title {
             font-size: 0.85rem;
             font-weight: 600;
             margin-bottom: 0.75rem;
-            color: #ccc;
+            color: #6b21a8;
         }
 
         .legend-items {
@@ -134,14 +186,14 @@
             align-items: center;
             gap: 0.5rem;
             font-size: 0.8rem;
-            color: #999;
+            color: #4c1d95;
         }
 
         .legend-color {
             width: 16px;
             height: 16px;
             border-radius: 50%;
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            border: 2px solid #6b21a8;
         }
 
         /* Right Side - Visualizations */
@@ -150,11 +202,11 @@
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 2px;
-            background: #3a3a3a;
+            background: #c084fc;
         }
 
         .viz-panel {
-            background: #242424;
+            background: rgba(255, 255, 255, 0.95);
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
@@ -163,18 +215,20 @@
 
         .viz-header {
             margin-bottom: 1rem;
+            padding-bottom: 0.75rem;
+            border-bottom: 2px solid #e9d5ff;
         }
 
         .viz-header h3 {
             font-size: 1rem;
             font-weight: 600;
-            color: #fff;
+            color: #6b21a8;
             margin-bottom: 0.25rem;
         }
 
         .viz-header p {
             font-size: 0.8rem;
-            color: #999;
+            color: #7c3aed;
         }
 
         .viz-content {
@@ -198,12 +252,12 @@
         }
 
         .county-circle:hover {
-            filter: brightness(1.3);
+            filter: brightness(1.1);
         }
 
         .county-text {
             pointer-events: none;
-            fill: white;
+            fill: #1f2937;
             font-weight: 600;
         }
 
@@ -218,12 +272,12 @@
         }
 
         .axis-label {
-            fill: #999;
+            fill: #6b21a8;
             font-size: 11px;
         }
 
         .axis-line {
-            stroke: #555;
+            stroke: #c084fc;
             stroke-width: 1;
         }
 
@@ -234,52 +288,53 @@
         }
 
         .heatmap-cell:hover rect {
-            stroke: white;
+            stroke: #6b21a8;
             stroke-width: 2;
         }
 
         .heatmap-text {
-            fill: white;
+            fill: #1f2937;
             font-size: 10px;
             font-weight: 600;
             pointer-events: none;
         }
 
         .heatmap-label {
-            fill: #ccc;
+            fill: #6b21a8;
             font-size: 11px;
         }
 
         /* Loading State */
         .loading {
             text-align: center;
-            color: #999;
+            color: #7c3aed;
             padding: 2rem;
         }
 
         .error {
             text-align: center;
-            color: #ff6b6b;
+            color: #dc2626;
             padding: 1rem;
-            background: rgba(255, 107, 107, 0.1);
+            background: rgba(220, 38, 38, 0.1);
             border-radius: 8px;
             font-size: 0.9rem;
+            border: 1px solid #fca5a5;
         }
 
         /* Tooltip */
         .tooltip {
             position: fixed;
-            background: rgba(0, 0, 0, 0.95);
+            background: linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%);
             color: white;
             padding: 0.75rem 1rem;
-            border-radius: 6px;
+            border-radius: 8px;
             font-size: 0.85rem;
             pointer-events: none;
             opacity: 0;
             transition: opacity 0.2s;
             z-index: 1000;
-            border: 1px solid #555;
-            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            border: 2px solid #a78bfa;
+            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.4);
             max-width: 250px;
         }
 
@@ -293,7 +348,7 @@
         }
 
         .tooltip-value {
-            color: #aaa;
+            color: rgba(255, 255, 255, 0.9);
             font-size: 0.8rem;
         }
     </style>
@@ -306,15 +361,18 @@
                 <h1>Utah Preterm Births Analysis</h1>
                 <p>32-33 Weeks Gestation • 2008-2012 • County-Level Data</p>
             </div>
-            <div class="year-control">
-                <label for="year-select">Year:</label>
-                <select id="year-select">
-                    <option value="2012" selected>2012</option>
-                    <option value="2011">2011</option>
-                    <option value="2010">2010</option>
-                    <option value="2009">2009</option>
-                    <option value="2008">2008</option>
-                </select>
+            <div class="year-control-wrapper">
+                <div class="interaction-hint">You Can Interact Here</div>
+                <div class="year-control">
+                    <label for="year-select">Year:</label>
+                    <select id="year-select">
+                        <option value="2012" selected>2012</option>
+                        <option value="2011">2011</option>
+                        <option value="2010">2010</option>
+                        <option value="2009">2009</option>
+                        <option value="2008">2008</option>
+                    </select>
+                </div>
             </div>
         </div>
 
@@ -407,6 +465,7 @@
     <!-- Tooltip -->
     <div class="tooltip" id="tooltip"></div>
 
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         const CSV_URL = 'Preterm_Births_32-33_Weeks_Gestation_Counties_In_Utah_2003-2012_20260122.csv';
         
@@ -429,7 +488,7 @@
         const tooltip = document.getElementById('tooltip');
 
         function getColorForRate(rate) {
-            if (!rate) return '#666';
+            if (!rate) return '#cbd5e1';
             const rateNum = parseFloat(rate);
             if (rateNum < 1.0) return '#4ade80';
             if (rateNum < 1.3) return '#fbbf24';
@@ -609,9 +668,9 @@
             let svgHTML = `
                 <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="max-width: 350px;">
                     <path d="M 30 5 L 70 5 L 70 110 L 30 110 L 30 85 L 20 85 L 20 30 L 30 30 Z" 
-                          fill="rgba(255, 255, 255, 0.05)" 
-                          stroke="rgba(255, 255, 255, 0.2)" 
-                          stroke-width="0.5"/>
+                          fill="rgba(167, 139, 250, 0.15)" 
+                          stroke="#a78bfa" 
+                          stroke-width="0.8"/>
             `;
             
             Object.entries(yearData).forEach(([locale, data]) => {
@@ -623,7 +682,7 @@
                 svgHTML += `
                     <g class="county-circle" data-county="${data.name}" data-rate="${data.rate}" data-count="${data.count}" data-births="${data.totalBirths}">
                         <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.85" 
-                                stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
+                                stroke="#6b21a8" stroke-width="0.8"/>
                         <text x="${cx}" y="${cy + 1}" text-anchor="middle" class="county-text" font-size="3">${data.rate.toFixed(1)}%</text>
                     </g>
                 `;
@@ -683,7 +742,7 @@
                         <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${d.age}</text>
                         <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
                               fill="${getColorForRate(d.rate)}" rx="3"/>
-                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#6b21a8">${d.rate.toFixed(1)}%</text>
                     </g>
                 `;
             });
@@ -742,7 +801,7 @@
                         <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${displayName}</text>
                         <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
                               fill="${getColorForRate(d.rate)}" rx="3"/>
-                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#6b21a8">${d.rate.toFixed(1)}%</text>
                     </g>
                 `;
             });
@@ -797,14 +856,14 @@
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
                     const intensity = value / maxValue;
-                    const color = `rgba(239, 68, 68, ${intensity * 0.8 + 0.2})`;
+                    const color = `rgba(192, 132, 252, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
                     svgHTML += `
                         <g class="heatmap-cell" data-year="${years[i]}" data-age="${ageGroups[j]}" data-count="${value}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                  fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
+                                  fill="${color}" stroke="#a78bfa" stroke-width="1" rx="3"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
                                   text-anchor="middle" class="heatmap-text">${value}</text>
                         </g>
@@ -862,14 +921,14 @@
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
                     const intensity = value / maxValue;
-                    const color = `rgba(234, 179, 8, ${intensity * 0.8 + 0.2})`;
+                    const color = `rgba(251, 191, 36, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
                     svgHTML += `
                         <g class="heatmap-cell" data-year="${years[i]}" data-race="${races[j]}" data-count="${value}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                  fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
+                                  fill="${color}" stroke="#d97706" stroke-width="1" rx="3"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
                                   text-anchor="middle" class="heatmap-text">${value}</text>
                         </g>
