@@ -7,34 +7,25 @@
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #e9d5ff 0%, #ddd6fe 50%, #c4b5fd 100%);
-            color: #1f2937;
+            background: linear-gradient(135deg, #ffd4c4 0%, #ffc4b8 50%, #ffb8aa 100%);
+            color: #4a2c2a;
             overflow-x: hidden;
         }
 
-        .dashboard-container {
-            display: grid;
-            grid-template-rows: auto 1fr;
-            height: 100vh;
-        }
+        .dashboard-container { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
 
-        /* Header */
         .dashboard-header {
-            background: linear-gradient(135deg, #c084fc 0%, #a78bfa 100%);
+            background: linear-gradient(135deg, #ff9a8b 0%, #ff7e7e 100%);
             padding: 1.5rem 2rem;
-            border-bottom: 2px solid #9333ea;
+            border-bottom: 3px solid #e86a5d;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(147, 51, 234, 0.2);
+            box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
         }
 
         .title-section h1 {
@@ -42,26 +33,18 @@
             font-weight: 700;
             margin-bottom: 0.25rem;
             color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
         }
 
-        .title-section p {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.9rem;
-        }
+        .title-section p { color: rgba(255, 255, 255, 0.95); font-size: 0.9rem; }
 
-        .year-control-wrapper {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-end;
-            gap: 0.5rem;
-        }
+        .year-control-wrapper { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
 
         .interaction-hint {
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #fde047;
+            color: #fff4e6;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -69,84 +52,55 @@
             animation: pulse 2s ease-in-out infinite;
         }
 
-        .interaction-hint::before,
-        .interaction-hint::after {
-            content: '→';
-            font-size: 0.9rem;
-        }
+        .interaction-hint::before, .interaction-hint::after { content: '→'; font-size: 0.9rem; }
 
-        @keyframes pulse {
-            0%, 100% { opacity: 1; }
-            50% { opacity: 0.7; }
-        }
+        @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
         .year-control {
             display: flex;
             align-items: center;
             gap: 1rem;
-            background: rgba(255, 255, 255, 0.2);
+            background: rgba(255, 255, 255, 0.25);
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
             backdrop-filter: blur(10px);
         }
 
-        .year-control label {
-            color: white;
-            font-size: 0.95rem;
-            font-weight: 600;
-        }
+        .year-control label { color: white; font-size: 0.95rem; font-weight: 600; }
 
         .year-control select {
             padding: 0.5rem 1.5rem;
             background: white;
-            border: 2px solid #9333ea;
+            border: 2px solid #e86a5d;
             border-radius: 8px;
-            color: #6b21a8;
+            color: #d64933;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(147, 51, 234, 0.2);
+            box-shadow: 0 2px 4px rgba(232, 106, 93, 0.2);
         }
 
         .year-control select:hover {
-            background: #faf5ff;
-            border-color: #7c3aed;
+            background: #fff8f5;
+            border-color: #ff7e7e;
             transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(147, 51, 234, 0.3);
+            box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
         }
 
-        .year-control select:focus {
-            outline: none;
-            border-color: #7c3aed;
-            box-shadow: 0 0 0 3px rgba(167, 139, 250, 0.3);
-        }
+        .dashboard-main { display: grid; grid-template-columns: 400px 1fr; height: calc(100vh - 90px); gap: 0; }
 
-        /* Main Content */
-        .dashboard-main {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            height: calc(100vh - 90px);
-            gap: 0;
-        }
-
-        /* Left Side - Map */
         .map-section {
             background: rgba(255, 255, 255, 0.9);
-            border-right: 2px solid #c084fc;
+            border-right: 2px solid #ffb8aa;
             padding: 2rem;
             display: flex;
             flex-direction: column;
             overflow-y: auto;
-            box-shadow: 4px 0 6px rgba(147, 51, 234, 0.1);
+            box-shadow: 4px 0 6px rgba(255, 154, 139, 0.15);
         }
 
-        .map-title {
-            font-size: 1.2rem;
-            font-weight: 600;
-            margin-bottom: 1.5rem;
-            color: #6b21a8;
-        }
+        .map-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: #d64933; }
 
         .map-container {
             flex: 1;
@@ -155,7 +109,7 @@
             justify-content: center;
             position: relative;
             min-height: 400px;
-            background: rgba(167, 139, 250, 0.1);
+            background: rgba(255, 212, 196, 0.3);
             border-radius: 12px;
             padding: 1rem;
         }
@@ -163,46 +117,22 @@
         .map-legend {
             margin-top: 1.5rem;
             padding: 1rem;
-            background: rgba(167, 139, 250, 0.15);
+            background: rgba(255, 184, 170, 0.2);
             border-radius: 8px;
-            border: 1px solid #c084fc;
+            border: 1px solid #ffb8aa;
         }
 
-        .legend-title {
-            font-size: 0.85rem;
-            font-weight: 600;
-            margin-bottom: 0.75rem;
-            color: #6b21a8;
-        }
+        .legend-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: #d64933; }
+        .legend-items { display: flex; flex-direction: column; gap: 0.5rem; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #7a4a47; }
+        .legend-color { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #d64933; }
 
-        .legend-items {
-            display: flex;
-            flex-direction: column;
-            gap: 0.5rem;
-        }
-
-        .legend-item {
-            display: flex;
-            align-items: center;
-            gap: 0.5rem;
-            font-size: 0.8rem;
-            color: #4c1d95;
-        }
-
-        .legend-color {
-            width: 16px;
-            height: 16px;
-            border-radius: 50%;
-            border: 2px solid #6b21a8;
-        }
-
-        /* Right Side - Visualizations */
         .viz-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
             grid-template-rows: 1fr 1fr;
             gap: 2px;
-            background: #c084fc;
+            background: #ffb8aa;
         }
 
         .viz-panel {
@@ -213,118 +143,32 @@
             overflow: auto;
         }
 
-        .viz-header {
-            margin-bottom: 1rem;
-            padding-bottom: 0.75rem;
-            border-bottom: 2px solid #e9d5ff;
-        }
+        .viz-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #ffd4c4; }
+        .viz-header h3 { font-size: 1rem; font-weight: 600; color: #d64933; margin-bottom: 0.25rem; }
+        .viz-header p { font-size: 0.8rem; color: #ff7e7e; }
+        .viz-content { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 200px; }
 
-        .viz-header h3 {
-            font-size: 1rem;
-            font-weight: 600;
-            color: #6b21a8;
-            margin-bottom: 0.25rem;
-        }
+        svg { width: 100%; height: 100%; }
+        .county-circle { cursor: pointer; transition: all 0.2s ease; }
+        .county-circle:hover { filter: brightness(1.1); }
+        .county-text { pointer-events: none; fill: #2d1a18; font-weight: 600; }
 
-        .viz-header p {
-            font-size: 0.8rem;
-            color: #7c3aed;
-        }
+        .bar { transition: all 0.3s ease; cursor: pointer; }
+        .bar:hover rect { opacity: 0.8; }
+        .axis-label { fill: #7a4a47; font-size: 11px; }
+        .axis-line { stroke: #ffb8aa; stroke-width: 2; }
 
-        .viz-content {
-            flex: 1;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            position: relative;
-            min-height: 200px;
-        }
+        .heatmap-cell { cursor: pointer; transition: all 0.2s ease; }
+        .heatmap-cell:hover rect { stroke: #d64933; stroke-width: 2; }
+        .heatmap-text { fill: #2d1a18; font-size: 10px; font-weight: 600; pointer-events: none; }
+        .heatmap-label { fill: #7a4a47; font-size: 11px; }
 
-        /* SVG Styles */
-        svg {
-            width: 100%;
-            height: 100%;
-        }
+        .loading { text-align: center; color: #ff7e7e; padding: 2rem; }
+        .error { text-align: center; color: #dc2626; padding: 1rem; background: rgba(220, 38, 38, 0.1); border-radius: 8px; font-size: 0.9rem; border: 1px solid #fca5a5; }
 
-        .county-circle {
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .county-circle:hover {
-            filter: brightness(1.1);
-        }
-
-        .county-text {
-            pointer-events: none;
-            fill: #1f2937;
-            font-weight: 600;
-        }
-
-        /* Bar Chart Styles */
-        .bar {
-            transition: all 0.3s ease;
-            cursor: pointer;
-        }
-
-        .bar:hover rect {
-            opacity: 0.8;
-        }
-
-        .axis-label {
-            fill: #6b21a8;
-            font-size: 11px;
-        }
-
-        .axis-line {
-            stroke: #c084fc;
-            stroke-width: 1;
-        }
-
-        /* Heatmap Styles */
-        .heatmap-cell {
-            cursor: pointer;
-            transition: all 0.2s ease;
-        }
-
-        .heatmap-cell:hover rect {
-            stroke: #6b21a8;
-            stroke-width: 2;
-        }
-
-        .heatmap-text {
-            fill: #1f2937;
-            font-size: 10px;
-            font-weight: 600;
-            pointer-events: none;
-        }
-
-        .heatmap-label {
-            fill: #6b21a8;
-            font-size: 11px;
-        }
-
-        /* Loading State */
-        .loading {
-            text-align: center;
-            color: #7c3aed;
-            padding: 2rem;
-        }
-
-        .error {
-            text-align: center;
-            color: #dc2626;
-            padding: 1rem;
-            background: rgba(220, 38, 38, 0.1);
-            border-radius: 8px;
-            font-size: 0.9rem;
-            border: 1px solid #fca5a5;
-        }
-
-        /* Tooltip */
         .tooltip {
             position: fixed;
-            background: linear-gradient(135deg, #6b21a8 0%, #7c3aed 100%);
+            background: linear-gradient(135deg, #d64933 0%, #ff7e7e 100%);
             color: white;
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -333,29 +177,18 @@
             opacity: 0;
             transition: opacity 0.2s;
             z-index: 1000;
-            border: 2px solid #a78bfa;
-            box-shadow: 0 4px 12px rgba(107, 33, 168, 0.4);
+            border: 2px solid #ff9a8b;
+            box-shadow: 0 4px 12px rgba(214, 73, 51, 0.4);
             max-width: 250px;
         }
 
-        .tooltip.show {
-            opacity: 1;
-        }
-
-        .tooltip-title {
-            font-weight: 600;
-            margin-bottom: 0.25rem;
-        }
-
-        .tooltip-value {
-            color: rgba(255, 255, 255, 0.9);
-            font-size: 0.8rem;
-        }
+        .tooltip.show { opacity: 1; }
+        .tooltip-title { font-weight: 600; margin-bottom: 0.25rem; }
+        .tooltip-value { color: rgba(255, 255, 255, 0.95); font-size: 0.8rem; }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
-        <!-- Header -->
         <div class="dashboard-header">
             <div class="title-section">
                 <h1>Utah Preterm Births Analysis</h1>
@@ -376,9 +209,7 @@
             </div>
         </div>
 
-        <!-- Main Dashboard -->
         <div class="dashboard-main">
-            <!-- Left: Map -->
             <div class="map-section">
                 <h2 class="map-title">Geographic Distribution</h2>
                 <div class="map-container" id="map-container">
@@ -413,9 +244,7 @@
                 </div>
             </div>
 
-            <!-- Right: 4 Visualizations -->
             <div class="viz-section">
-                <!-- Top Left: Age Distribution -->
                 <div class="viz-panel">
                     <div class="viz-header">
                         <h3>Preterm Births by Maternal Age</h3>
@@ -426,7 +255,6 @@
                     </div>
                 </div>
 
-                <!-- Top Right: Race Distribution -->
                 <div class="viz-panel">
                     <div class="viz-header">
                         <h3>Preterm Births by Race/Ethnicity</h3>
@@ -437,7 +265,6 @@
                     </div>
                 </div>
 
-                <!-- Bottom Left: Age Heatmap -->
                 <div class="viz-panel">
                     <div class="viz-header">
                         <h3>Age Group Trends</h3>
@@ -448,7 +275,6 @@
                     </div>
                 </div>
 
-                <!-- Bottom Right: Race Heatmap -->
                 <div class="viz-panel">
                     <div class="viz-header">
                         <h3>Race/Ethnicity Trends</h3>
@@ -462,10 +288,8 @@
         </div>
     </div>
 
-    <!-- Tooltip -->
     <div class="tooltip" id="tooltip"></div>
 
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/PapaParse/5.4.1/papaparse.min.js"></script>
     <script>
         const CSV_URL = 'Preterm_Births_32-33_Weeks_Gestation_Counties_In_Utah_2003-2012_20260122.csv';
         
@@ -488,7 +312,7 @@
         const tooltip = document.getElementById('tooltip');
 
         function getColorForRate(rate) {
-            if (!rate) return '#cbd5e1';
+            if (!rate) return '#e5e7eb';
             const rateNum = parseFloat(rate);
             if (rateNum < 1.0) return '#4ade80';
             if (rateNum < 1.3) return '#fbbf24';
@@ -515,7 +339,7 @@
                 return parseCSV(csvText);
             } catch (error) {
                 console.error('Error:', error);
-                document.getElementById('map-container').innerHTML = '<div class="error">Could not load CSV file. Make sure it\'s in the same directory.</div>';
+                document.getElementById('map-container').innerHTML = '<div class="error">Could not load CSV file.</div>';
                 return null;
             }
         }
@@ -594,7 +418,6 @@
                 
                 const year = timeframe;
                 
-                // Process COUNTY data
                 if (localeLevel === 'County' && dimensionList === 'Total') {
                     const position = COUNTY_POSITIONS[locale];
                     if (!position) return;
@@ -614,16 +437,11 @@
                     };
                 }
                 
-                // Process STATE-level data for age and race
                 if (localeLevel === 'State' && locale === 'Utah') {
                     if (!stateDataByYear[year]) {
-                        stateDataByYear[year] = {
-                            age: {},
-                            race: {}
-                        };
+                        stateDataByYear[year] = { age: {}, race: {} };
                     }
                     
-                    // Age groups
                     if (age && age !== '' && !raceEthnicity) {
                         const ageGroup = age.replace('Aged ', '').replace(' years', '').replace(' (Of mother)', '').trim();
                         if (!stateDataByYear[year].age[ageGroup]) {
@@ -637,7 +455,6 @@
                         }
                     }
                     
-                    // Race/ethnicity groups
                     if (raceEthnicity && raceEthnicity !== '' && dimensionList.includes(raceEthnicity)) {
                         if (!stateDataByYear[year].race[raceEthnicity]) {
                             const cleanNum = numerator.replace(/,/g, '');
@@ -668,9 +485,9 @@
             let svgHTML = `
                 <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="max-width: 350px;">
                     <path d="M 30 5 L 70 5 L 70 110 L 30 110 L 30 85 L 20 85 L 20 30 L 30 30 Z" 
-                          fill="rgba(167, 139, 250, 0.15)" 
-                          stroke="#a78bfa" 
-                          stroke-width="0.8"/>
+                          fill="rgba(255, 184, 170, 0.2)" 
+                          stroke="#ffb8aa" 
+                          stroke-width="1"/>
             `;
             
             Object.entries(yearData).forEach(([locale, data]) => {
@@ -681,8 +498,8 @@
                 
                 svgHTML += `
                     <g class="county-circle" data-county="${data.name}" data-rate="${data.rate}" data-count="${data.count}" data-births="${data.totalBirths}">
-                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.85" 
-                                stroke="#6b21a8" stroke-width="0.8"/>
+                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.9" 
+                                stroke="#d64933" stroke-width="1"/>
                         <text x="${cx}" y="${cy + 1}" text-anchor="middle" class="county-text" font-size="3">${data.rate.toFixed(1)}%</text>
                     </g>
                 `;
@@ -691,7 +508,6 @@
             svgHTML += '</svg>';
             document.getElementById('map-container').innerHTML = svgHTML;
             
-            // Add event listeners
             document.querySelectorAll('.county-circle').forEach(circle => {
                 circle.addEventListener('mouseenter', function(e) {
                     const name = this.dataset.county;
@@ -716,9 +532,7 @@
             }
 
             const ageGroups = ['15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
-            const chartData = ageGroups
-                .filter(ag => data[ag])
-                .map(ag => ({ age: ag, ...data[ag] }));
+            const chartData = ageGroups.filter(ag => data[ag]).map(ag => ({ age: ag, ...data[ag] }));
 
             if (chartData.length === 0) {
                 document.getElementById('age-chart').innerHTML = '<div class="error">No data</div>';
@@ -741,8 +555,8 @@
                     <g class="bar" data-age="${d.age}" data-rate="${d.rate}" data-count="${d.count}">
                         <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${d.age}</text>
                         <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
-                              fill="${getColorForRate(d.rate)}" rx="3"/>
-                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#6b21a8">${d.rate.toFixed(1)}%</text>
+                              fill="${getColorForRate(d.rate)}" rx="4"/>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#d64933" font-weight="600">${d.rate.toFixed(1)}%</text>
                     </g>
                 `;
             });
@@ -751,7 +565,6 @@
             
             document.getElementById('age-chart').innerHTML = svgHTML;
             
-            // Add event listeners
             document.querySelectorAll('#age-chart .bar').forEach(bar => {
                 bar.addEventListener('mouseenter', function(e) {
                     const age = this.dataset.age;
@@ -774,9 +587,7 @@
                 return;
             }
 
-            const chartData = Object.entries(data)
-                .map(([race, values]) => ({ race, ...values }))
-                .sort((a, b) => b.rate - a.rate);
+            const chartData = Object.entries(data).map(([race, values]) => ({ race, ...values })).sort((a, b) => b.rate - a.rate);
 
             if (chartData.length === 0) {
                 document.getElementById('race-chart').innerHTML = '<div class="error">No data</div>';
@@ -800,8 +611,8 @@
                     <g class="bar" data-race="${d.race}" data-rate="${d.rate}" data-count="${d.count}">
                         <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${displayName}</text>
                         <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
-                              fill="${getColorForRate(d.rate)}" rx="3"/>
-                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#6b21a8">${d.rate.toFixed(1)}%</text>
+                              fill="${getColorForRate(d.rate)}" rx="4"/>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#d64933" font-weight="600">${d.rate.toFixed(1)}%</text>
                     </g>
                 `;
             });
@@ -810,7 +621,6 @@
             
             document.getElementById('race-chart').innerHTML = svgHTML;
             
-            // Add event listeners
             document.querySelectorAll('#race-chart .bar').forEach(bar => {
                 bar.addEventListener('mouseenter', function(e) {
                     const race = this.dataset.race;
@@ -856,14 +666,14 @@
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
                     const intensity = value / maxValue;
-                    const color = `rgba(192, 132, 252, ${intensity * 0.7 + 0.3})`;
+                    const color = `rgba(255, 126, 126, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
                     svgHTML += `
                         <g class="heatmap-cell" data-year="${years[i]}" data-age="${ageGroups[j]}" data-count="${value}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                  fill="${color}" stroke="#a78bfa" stroke-width="1" rx="3"/>
+                                  fill="${color}" stroke="#ffb8aa" stroke-width="1" rx="4"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
                                   text-anchor="middle" class="heatmap-text">${value}</text>
                         </g>
@@ -874,7 +684,6 @@
             svgHTML += '</svg>';
             document.getElementById('age-heatmap').innerHTML = svgHTML;
             
-            // Add event listeners
             document.querySelectorAll('#age-heatmap .heatmap-cell').forEach(cell => {
                 cell.addEventListener('mouseenter', function(e) {
                     const year = this.dataset.year;
@@ -921,14 +730,14 @@
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
                     const intensity = value / maxValue;
-                    const color = `rgba(251, 191, 36, ${intensity * 0.7 + 0.3})`;
+                    const color = `rgba(255, 154, 139, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
                     svgHTML += `
                         <g class="heatmap-cell" data-year="${years[i]}" data-race="${races[j]}" data-count="${value}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                  fill="${color}" stroke="#d97706" stroke-width="1" rx="3"/>
+                                  fill="${color}" stroke="#e86a5d" stroke-width="1" rx="4"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
                                   text-anchor="middle" class="heatmap-text">${value}</text>
                         </g>
@@ -939,7 +748,6 @@
             svgHTML += '</svg>';
             document.getElementById('race-heatmap').innerHTML = svgHTML;
             
-            // Add event listeners
             document.querySelectorAll('#race-heatmap .heatmap-cell').forEach(cell => {
                 cell.addEventListener('mouseenter', function(e) {
                     const year = this.dataset.year;
@@ -968,8 +776,6 @@
                 const processed = processData(csvData);
                 allData = processed.countyData;
                 stateData = processed.stateDataByYear;
-                
-                console.log('Data loaded successfully');
                 
                 const yearSelect = document.getElementById('year-select');
                 updateDashboard(yearSelect.value);
