@@ -171,6 +171,15 @@
             color: #d8b4fe;
             font-size: 0.95rem;
         }
+
+        .debug-info {
+            background: rgba(30, 41, 59, 0.8);
+            padding: 1rem;
+            margin-top: 2rem;
+            border-radius: 8px;
+            font-size: 0.9rem;
+            color: #cbd5e1;
+        }
     </style>
 </head>
 <body>
@@ -183,16 +192,16 @@
         <div class="year-selector">
             <label for="year-select">Select Year:</label>
             <select id="year-select">
-                <option value="2003">2003</option>
-                <option value="2004">2004</option>
-                <option value="2005">2005</option>
-                <option value="2006">2006</option>
-                <option value="2007">2007</option>
-                <option value="2008">2008</option>
-                <option value="2009">2009</option>
-                <option value="2010">2010</option>
-                <option value="2011">2011</option>
                 <option value="2012" selected>2012</option>
+                <option value="2011">2011</option>
+                <option value="2010">2010</option>
+                <option value="2009">2009</option>
+                <option value="2008">2008</option>
+                <option value="2007">2007</option>
+                <option value="2006">2006</option>
+                <option value="2005">2005</option>
+                <option value="2004">2004</option>
+                <option value="2003">2003</option>
             </select>
         </div>
 
@@ -223,6 +232,12 @@
                     <span>High (&gt;1.7%)</span>
                 </div>
             </div>
+        </div>
+
+        <!-- Debug info (remove after testing) -->
+        <div id="debug-info" class="debug-info" style="display: none;">
+            <h3>Debug Information:</h3>
+            <div id="debug-content"></div>
         </div>
     </div>
 
@@ -269,6 +284,7 @@
                         <h3>Error Loading Data</h3>
                         <p>Could not load CSV file. Make sure it's in the same directory as this HTML file.</p>
                         <p style="font-size: 0.9rem; margin-top: 1rem;">Looking for: ${CSV_URL}</p>
+                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Error: ${error.message}</p>
                     </div>
                 `;
                 return null;
@@ -277,19 +293,48 @@
 
         function parseCSV(csvText) {
             const lines = csvText.trim().split('\n');
-            const headers = lines[0].split(',').map(h => h.trim().replace(/"/g, ''));
-            const data = [];
             
+            // Parse first line to get headers
+            const firstLine = lines[0];
+            const headers = [];
+            let inQuotes = false;
+            let currentField = '';
+            
+            for (let i = 0; i < firstLine.length; i++) {
+                const char = firstLine[i];
+                if (char === '"') {
+                    inQuotes = !inQuotes;
+                } else if (char === ',' && !inQuotes) {
+                    headers.push(currentField.trim());
+                    currentField = '';
+                } else {
+                    currentField += char;
+                }
+            }
+            headers.push(currentField.trim()); // Add last field
+            
+            // Parse data rows
+            const data = [];
             for (let i = 1; i < lines.length; i++) {
                 if (lines[i].trim() === '') continue;
                 
-                // Handle CSV with quoted fields
-                const regex = /(".*?"|[^",\s]+)(?=\s*,|\s*$)/g;
+                const line = lines[i];
                 const values = [];
-                let match;
-                while ((match = regex.exec(lines[i])) !== null) {
-                    values.push(match[0].replace(/^"|"$/g, ''));
+                inQuotes = false;
+                currentField = '';
+                
+                for (let j = 0; j < line.length; j++) {
+                    const char = line[j];
+                    if (char === '"') {
+                        inQuotes = !inQuotes;
+                    } else if (char === ',' && !inQuotes) {
+                        values.push(currentField.trim());
+                        currentField = '';
+                    } else {
+                        currentField += char;
+                    }
                 }
+                values.push(currentField.trim()); // Add last field
                 
                 const row = {};
                 headers.forEach((header, index) => {
@@ -299,11 +344,13 @@
                 data.push(row);
             }
             
+            console.log(`Parsed ${data.length} rows with ${headers.length} columns`);
             return { headers, data };
         }
 
         function processData(csvData) {
             const processed = {};
+            let rowsProcessed = 0;
             
             csvData.data.forEach(row => {
                 const timeframe = row['Timeframe'];
@@ -314,15 +361,14 @@
                 const numerator = row['Numerator'];
                 const denominator = row['Denominator'];
                 
-                // Only process county-level data with "Total" dimension (no age/race breakdown)
+                // Only process county-level data with "Total" dimension
                 if (localeLevel !== 'County' || dimensionList !== 'Total') return;
-                if (numericValue === 'DSU' || !numericValue) return; // Skip suppressed data
+                if (numericValue === 'DSU' || !numericValue || numericValue === '') return;
                 
                 // Extract year from timeframe
                 let year = timeframe;
                 if (timeframe.includes('-')) {
-                    // For ranges like "2010-2012", use the end year
-                    year = timeframe.split('-')[1];
+                    year = timeframe.split('-')[1].trim();
                 }
                 
                 if (!processed[year]) {
@@ -330,18 +376,29 @@
                 }
                 
                 const position = COUNTY_POSITIONS[locale];
-                if (!position) return;
+                if (!position) {
+                    console.log(`No position for county: ${locale}`);
+                    return;
+                }
+                
+                // Remove commas and parse numbers
+                const cleanNumerator = numerator.replace(/,/g, '');
+                const cleanDenominator = denominator.replace(/,/g, '');
                 
                 processed[year][locale] = {
                     rate: parseFloat(numericValue.replace('%', '')),
-                    count: parseInt(numerator) || 0,
-                    totalBirths: parseInt(denominator) || 0,
+                    count: parseInt(cleanNumerator) || 0,
+                    totalBirths: parseInt(cleanDenominator) || 0,
                     x: position.x,
                     y: position.y,
                     name: position.name
                 };
+                
+                rowsProcessed++;
             });
             
+            console.log(`Processed ${rowsProcessed} county records`);
+            console.log('Years found:', Object.keys(processed));
             return processed;
         }
 
@@ -367,7 +424,6 @@
 
             const avgRate = (totalCases / totalBirths * 100).toFixed(2);
             const maxRate = Math.max(...rates).toFixed(1);
-            const minRate = Math.min(...rates).toFixed(1);
 
             document.getElementById('stats-container').innerHTML = `
                 <div class="stat-card">
@@ -458,6 +514,13 @@
             if (csvData) {
                 allData = processData(csvData);
                 console.log('Processed data:', allData);
+                
+                // Show debug info
+                const debugContent = document.getElementById('debug-content');
+                debugContent.innerHTML = `
+                    <p><strong>Years available:</strong> ${Object.keys(allData).join(', ')}</p>
+                    <p><strong>Total rows parsed:</strong> ${csvData.data.length}</p>
+                `;
                 
                 const yearSelect = document.getElementById('year-select');
                 const currentYear = yearSelect.value;
