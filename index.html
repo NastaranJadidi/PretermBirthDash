@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Utah Preterm Births Dashboard</title>
+    <title>Utah Preterm Births - Comprehensive Analysis</title>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
@@ -13,11 +13,11 @@
             font-family: 'Inter', sans-serif;
             background: linear-gradient(135deg, #ffd4c4 0%, #ffc4b8 50%, #ffb8aa 100%);
             color: #4a2c2a;
-            overflow-x: hidden;
         }
 
-        .dashboard-container { display: grid; grid-template-rows: auto 1fr; height: 100vh; }
+        .dashboard-container { display: flex; flex-direction: column; min-height: 100vh; }
 
+        /* Header */
         .dashboard-header {
             background: linear-gradient(135deg, #ff9a8b 0%, #ff7e7e 100%);
             padding: 1.5rem 2rem;
@@ -26,6 +26,9 @@
             justify-content: space-between;
             align-items: center;
             box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
+            position: sticky;
+            top: 0;
+            z-index: 100;
         }
 
         .title-section h1 {
@@ -37,6 +40,12 @@
         }
 
         .title-section p { color: rgba(255, 255, 255, 0.95); font-size: 0.9rem; }
+
+        .controls-wrapper {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
 
         .year-control-wrapper { display: flex; flex-direction: column; align-items: flex-end; gap: 0.5rem; }
 
@@ -56,7 +65,7 @@
 
         @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.7; } }
 
-        .year-control {
+        .year-control, .county-control {
             display: flex;
             align-items: center;
             gap: 1rem;
@@ -66,9 +75,9 @@
             backdrop-filter: blur(10px);
         }
 
-        .year-control label { color: white; font-size: 0.95rem; font-weight: 600; }
+        .year-control label, .county-control label { color: white; font-size: 0.95rem; font-weight: 600; }
 
-        .year-control select {
+        .year-control select, .county-control select {
             padding: 0.5rem 1.5rem;
             background: white;
             border: 2px solid #e86a5d;
@@ -81,14 +90,27 @@
             box-shadow: 0 2px 4px rgba(232, 106, 93, 0.2);
         }
 
-        .year-control select:hover {
+        .year-control select:hover, .county-control select:hover {
             background: #fff8f5;
             border-color: #ff7e7e;
             transform: translateY(-1px);
             box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
         }
 
-        .dashboard-main { display: grid; grid-template-columns: 400px 1fr; height: calc(100vh - 90px); gap: 0; }
+        /* Main Content */
+        .dashboard-main { flex: 1; }
+
+        .section-wrapper {
+            margin-bottom: 2px;
+        }
+
+        /* Top Section - Original Dashboard */
+        .top-section {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            min-height: 600px;
+            gap: 0;
+        }
 
         .map-section {
             background: rgba(255, 255, 255, 0.9);
@@ -96,7 +118,6 @@
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            overflow-y: auto;
             box-shadow: 4px 0 6px rgba(255, 154, 139, 0.15);
         }
 
@@ -148,19 +169,71 @@
         .viz-header p { font-size: 0.8rem; color: #ff7e7e; }
         .viz-content { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 200px; }
 
-        svg { width: 100%; height: 100%; }
-        .county-circle { cursor: pointer; transition: all 0.2s ease; }
-        .county-circle:hover { filter: brightness(1.1); }
-        .county-text { pointer-events: none; fill: #2d1a18; font-weight: 600; }
+        /* New Sections */
+        .full-width-section {
+            background: rgba(255, 255, 255, 0.95);
+            padding: 2rem;
+            margin: 2px 0;
+        }
 
-        .bar { transition: all 0.3s ease; cursor: pointer; }
-        .bar:hover rect { opacity: 0.8; }
+        .section-title {
+            font-size: 1.5rem;
+            font-weight: 700;
+            color: #d64933;
+            margin-bottom: 0.5rem;
+            padding-bottom: 0.5rem;
+            border-bottom: 3px solid #ffd4c4;
+        }
+
+        .section-subtitle {
+            font-size: 0.9rem;
+            color: #ff7e7e;
+            margin-bottom: 2rem;
+        }
+
+        .chart-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 2rem;
+            margin-top: 2rem;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 2px solid #ffd4c4;
+            box-shadow: 0 2px 8px rgba(255, 154, 139, 0.1);
+        }
+
+        .chart-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+            color: #d64933;
+            margin-bottom: 0.5rem;
+        }
+
+        .chart-description {
+            font-size: 0.85rem;
+            color: #7a4a47;
+            margin-bottom: 1rem;
+        }
+
+        /* County Specific Section */
+        .county-specific {
+            background: linear-gradient(135deg, rgba(255, 212, 196, 0.5) 0%, rgba(255, 196, 184, 0.5) 100%);
+            padding: 2rem;
+            margin: 2px 0;
+        }
+
+        svg { width: 100%; height: 100%; }
+        .county-circle, .bar, .heatmap-cell, .line-point { cursor: pointer; transition: all 0.2s ease; }
+        .county-circle:hover, .line-point:hover { filter: brightness(1.1); }
+        .bar:hover rect, .heatmap-cell:hover rect { opacity: 0.8; }
+        
+        .county-text, .heatmap-text { pointer-events: none; fill: #2d1a18; font-weight: 600; }
         .axis-label { fill: #7a4a47; font-size: 11px; }
         .axis-line { stroke: #ffb8aa; stroke-width: 2; }
-
-        .heatmap-cell { cursor: pointer; transition: all 0.2s ease; }
-        .heatmap-cell:hover rect { stroke: #d64933; stroke-width: 2; }
-        .heatmap-text { fill: #2d1a18; font-size: 10px; font-weight: 600; pointer-events: none; }
         .heatmap-label { fill: #7a4a47; font-size: 11px; }
 
         .loading { text-align: center; color: #ff7e7e; padding: 2rem; }
@@ -185,103 +258,237 @@
         .tooltip.show { opacity: 1; }
         .tooltip-title { font-weight: 600; margin-bottom: 0.25rem; }
         .tooltip-value { color: rgba(255, 255, 255, 0.95); font-size: 0.8rem; }
+
+        .insight-box {
+            background: rgba(255, 212, 196, 0.3);
+            border-left: 4px solid #ff7e7e;
+            padding: 1rem;
+            margin: 1rem 0;
+            border-radius: 4px;
+        }
+
+        .insight-box h4 {
+            color: #d64933;
+            font-size: 0.95rem;
+            margin-bottom: 0.5rem;
+        }
+
+        .insight-box p {
+            color: #7a4a47;
+            font-size: 0.85rem;
+        }
     </style>
 </head>
 <body>
     <div class="dashboard-container">
+        <!-- Header -->
         <div class="dashboard-header">
             <div class="title-section">
-                <h1>Utah Preterm Births Analysis</h1>
-                <p>32-33 Weeks Gestation • 2008-2012 • County-Level Data</p>
+                <h1>Utah Preterm Births - Comprehensive Analysis</h1>
+                <p>32-33 Weeks Gestation • 2008-2012 • Multi-Dimensional Data Explorer</p>
             </div>
-            <div class="year-control-wrapper">
-                <div class="interaction-hint">You Can Interact Here</div>
-                <div class="year-control">
-                    <label for="year-select">Year:</label>
-                    <select id="year-select">
-                        <option value="2012" selected>2012</option>
-                        <option value="2011">2011</option>
-                        <option value="2010">2010</option>
-                        <option value="2009">2009</option>
-                        <option value="2008">2008</option>
+            <div class="controls-wrapper">
+                <div class="year-control-wrapper">
+                    <div class="interaction-hint">You Can Interact Here</div>
+                    <div class="year-control">
+                        <label for="year-select">Year:</label>
+                        <select id="year-select">
+                            <option value="2012" selected>2012</option>
+                            <option value="2011">2011</option>
+                            <option value="2010">2010</option>
+                            <option value="2009">2009</option>
+                            <option value="2008">2008</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="county-control">
+                    <label for="county-select">County Analysis:</label>
+                    <select id="county-select">
+                        <option value="all" selected>All Counties</option>
+                        <option value="Salt Lake">Salt Lake</option>
+                        <option value="Utah">Utah</option>
+                        <option value="Davis">Davis</option>
+                        <option value="Weber">Weber</option>
+                        <option value="Washington">Washington</option>
+                        <option value="Cache">Cache</option>
+                        <option value="Box Elder">Box Elder</option>
+                        <option value="Tooele">Tooele</option>
+                        <option value="Iron">Iron</option>
+                        <option value="Sevier">Sevier</option>
+                        <option value="Uintah">Uintah</option>
                     </select>
                 </div>
             </div>
         </div>
 
+        <!-- Main Dashboard -->
         <div class="dashboard-main">
-            <div class="map-section">
-                <h2 class="map-title">Geographic Distribution</h2>
-                <div class="map-container" id="map-container">
-                    <div class="loading">Loading map...</div>
-                </div>
-                <div class="map-legend">
-                    <div class="legend-title">Preterm Birth Rate</div>
-                    <div class="legend-items">
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #4ade80;"></div>
-                            <span>Low (&lt;1.0%)</span>
+            <!-- Original Top Section -->
+            <div class="section-wrapper">
+                <div class="top-section">
+                    <div class="map-section">
+                        <h2 class="map-title">Geographic Distribution</h2>
+                        <div class="map-container" id="map-container">
+                            <div class="loading">Loading map...</div>
                         </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #fbbf24;"></div>
-                            <span>Moderate (1.0-1.3%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #fb923c;"></div>
-                            <span>Elevated (1.3-1.7%)</span>
-                        </div>
-                        <div class="legend-item">
-                            <div class="legend-color" style="background: #f87171;"></div>
-                            <span>High (&gt;1.7%)</span>
+                        <div class="map-legend">
+                            <div class="legend-title">Preterm Birth Rate</div>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #4ade80;"></div>
+                                    <span>Low (&lt;1.0%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #fbbf24;"></div>
+                                    <span>Moderate (1.0-1.3%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #fb923c;"></div>
+                                    <span>Elevated (1.3-1.7%)</span>
+                                </div>
+                                <div class="legend-item">
+                                    <div class="legend-color" style="background: #f87171;"></div>
+                                    <span>High (&gt;1.7%)</span>
+                                </div>
+                            </div>
+                            <div class="legend-title" style="margin-top: 1rem;">Circle Size</div>
+                            <div class="legend-items">
+                                <div class="legend-item">
+                                    <span>Proportional to total births</span>
+                                </div>
+                            </div>
                         </div>
                     </div>
-                    <div class="legend-title" style="margin-top: 1rem;">Circle Size</div>
-                    <div class="legend-items">
-                        <div class="legend-item">
-                            <span>Proportional to total births</span>
+
+                    <div class="viz-section">
+                        <div class="viz-panel">
+                            <div class="viz-header">
+                                <h3>Preterm Births by Maternal Age</h3>
+                                <p>Rate by age group</p>
+                            </div>
+                            <div class="viz-content" id="age-chart">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+
+                        <div class="viz-panel">
+                            <div class="viz-header">
+                                <h3>Preterm Births by Race/Ethnicity</h3>
+                                <p>Rate by demographic group</p>
+                            </div>
+                            <div class="viz-content" id="race-chart">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+
+                        <div class="viz-panel">
+                            <div class="viz-header">
+                                <h3>Age Group Trends</h3>
+                                <p>Cases by year and age</p>
+                            </div>
+                            <div class="viz-content" id="age-heatmap">
+                                <div class="loading">Loading...</div>
+                            </div>
+                        </div>
+
+                        <div class="viz-panel">
+                            <div class="viz-header">
+                                <h3>Race/Ethnicity Trends</h3>
+                                <p>Cases by year and demographic</p>
+                            </div>
+                            <div class="viz-content" id="race-heatmap">
+                                <div class="loading">Loading...</div>
+                            </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <div class="viz-section">
-                <div class="viz-panel">
-                    <div class="viz-header">
-                        <h3>Preterm Births by Maternal Age</h3>
-                        <p>Rate by age group</p>
-                    </div>
-                    <div class="viz-content" id="age-chart">
-                        <div class="loading">Loading...</div>
+            <!-- County Comparison Section -->
+            <div class="section-wrapper">
+                <div class="full-width-section">
+                    <h2 class="section-title">County Analysis & Comparison</h2>
+                    <p class="section-subtitle">Explore geographic patterns and trends across Utah counties</p>
+                    
+                    <div class="chart-grid">
+                        <div class="chart-container">
+                            <h3 class="chart-title">County Trends Over Time</h3>
+                            <p class="chart-description">Line chart showing each county's 5-year trend (2008-2012)</p>
+                            <div id="county-trends-chart" style="min-height: 350px;"></div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3 class="chart-title">County Ranking (2012)</h3>
+                            <p class="chart-description">Counties ranked by preterm birth rate</p>
+                            <div id="county-ranking-chart" style="min-height: 350px;"></div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3 class="chart-title">County Clustering</h3>
+                            <p class="chart-description">Counties grouped by rate ranges and geographic patterns</p>
+                            <div id="county-clustering-chart" style="min-height: 350px;"></div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3 class="chart-title">Population-Weighted Impact</h3>
+                            <p class="chart-description">Case count vs. rate - identifying where resources are needed</p>
+                            <div id="population-weighted-chart" style="min-height: 350px;"></div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="viz-panel">
-                    <div class="viz-header">
-                        <h3>Preterm Births by Race/Ethnicity</h3>
-                        <p>Rate by demographic group</p>
-                    </div>
-                    <div class="viz-content" id="race-chart">
-                        <div class="loading">Loading...</div>
+            <!-- Age-Focused Analysis Section -->
+            <div class="section-wrapper">
+                <div class="full-width-section">
+                    <h2 class="section-title">Age-Focused Analysis</h2>
+                    <p class="section-subtitle">Deep dive into maternal age patterns and risk factors</p>
+                    
+                    <div class="chart-grid">
+                        <div class="chart-container">
+                            <h3 class="chart-title">Teen Births Analysis (&lt;18 Years)</h3>
+                            <p class="chart-description">Teen mothers vs. adult mothers comparison</p>
+                            <div id="teen-births-chart" style="min-height: 350px;"></div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3 class="chart-title">Advanced Maternal Age (35+)</h3>
+                            <p class="chart-description">Risk increases with maternal age</p>
+                            <div id="advanced-age-chart" style="min-height: 350px;"></div>
+                        </div>
+
+                        <div class="chart-container" style="grid-column: 1 / -1;">
+                            <h3 class="chart-title">Age Group Comparison Bubble Chart</h3>
+                            <p class="chart-description">Bubble size = total births, position shows rate and count</p>
+                            <div id="age-bubble-chart" style="min-height: 400px;"></div>
+                        </div>
                     </div>
                 </div>
+            </div>
 
-                <div class="viz-panel">
-                    <div class="viz-header">
-                        <h3>Age Group Trends</h3>
-                        <p>Cases by year and age</p>
+            <!-- County-Specific Analysis Section -->
+            <div class="section-wrapper" id="county-specific-section" style="display: none;">
+                <div class="county-specific">
+                    <h2 class="section-title">County-Specific Analysis: <span id="selected-county-name">Salt Lake</span></h2>
+                    <p class="section-subtitle">Detailed breakdown for selected county</p>
+                    
+                    <div class="insight-box" id="county-insights">
+                        <h4>Key Insights</h4>
+                        <p id="insight-text">Loading insights...</p>
                     </div>
-                    <div class="viz-content" id="age-heatmap">
-                        <div class="loading">Loading...</div>
-                    </div>
-                </div>
 
-                <div class="viz-panel">
-                    <div class="viz-header">
-                        <h3>Race/Ethnicity Trends</h3>
-                        <p>Cases by year and demographic</p>
-                    </div>
-                    <div class="viz-content" id="race-heatmap">
-                        <div class="loading">Loading...</div>
+                    <div class="chart-grid">
+                        <div class="chart-container">
+                            <h3 class="chart-title">County × Age Analysis</h3>
+                            <p class="chart-description">Age group breakdown for this county</p>
+                            <div id="county-age-chart" style="min-height: 350px;"></div>
+                        </div>
+
+                        <div class="chart-container">
+                            <h3 class="chart-title">County × Race Analysis</h3>
+                            <p class="chart-description">Racial/ethnic breakdown for this county</p>
+                            <div id="county-race-chart" style="min-height: 350px;"></div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -309,6 +516,7 @@
 
         let allData = {};
         let stateData = {};
+        let countyDataAllYears = {};
         const tooltip = document.getElementById('tooltip');
 
         function getColorForRate(rate) {
@@ -400,6 +608,7 @@
         function processData(csvData) {
             const countyData = {};
             const stateDataByYear = {};
+            const allCountyData = {};
             const validYears = ['2008', '2009', '2010', '2011', '2012'];
             
             csvData.data.forEach(row => {
@@ -423,11 +632,13 @@
                     if (!position) return;
                     
                     if (!countyData[year]) countyData[year] = {};
+                    if (!allCountyData[position.name]) allCountyData[position.name] = {};
+                    if (!allCountyData[position.name][year]) allCountyData[position.name][year] = {};
                     
                     const cleanNumerator = numerator.replace(/,/g, '');
                     const cleanDenominator = denominator.replace(/,/g, '');
                     
-                    countyData[year][locale] = {
+                    const dataPoint = {
                         rate: parseFloat(numericValue.replace('%', '')),
                         count: parseInt(cleanNumerator) || 0,
                         totalBirths: parseInt(cleanDenominator) || 0,
@@ -435,6 +646,9 @@
                         y: position.y,
                         name: position.name
                     };
+                    
+                    countyData[year][locale] = dataPoint;
+                    allCountyData[position.name][year] = dataPoint;
                 }
                 
                 if (localeLevel === 'State' && locale === 'Utah') {
@@ -469,9 +683,10 @@
                 }
             });
             
-            return { countyData, stateDataByYear };
+            return { countyData, stateDataByYear, allCountyData };
         }
 
+        // [Original rendering functions remain the same]
         function renderMap(year) {
             const yearData = allData[year];
             if (!yearData || Object.keys(yearData).length === 0) {
@@ -763,6 +978,48 @@
             });
         }
 
+        // NEW: County comparison functions
+        function renderCountyTrends() {
+            document.getElementById('county-trends-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">County trends chart - Coming soon with full implementation</p>';
+        }
+
+        function renderCountyRanking() {
+            document.getElementById('county-ranking-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">County ranking chart - Coming soon with full implementation</p>';
+        }
+
+        function renderCountyClustering() {
+            document.getElementById('county-clustering-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">County clustering visualization - Coming soon with full implementation</p>';
+        }
+
+        function renderPopulationWeighted() {
+            document.getElementById('population-weighted-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">Population-weighted analysis - Coming soon with full implementation</p>';
+        }
+
+        function renderTeenBirths() {
+            document.getElementById('teen-births-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">Teen births analysis - Coming soon with full implementation</p>';
+        }
+
+        function renderAdvancedAge() {
+            document.getElementById('advanced-age-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">Advanced maternal age analysis - Coming soon with full implementation</p>';
+        }
+
+        function renderAgeBubble() {
+            document.getElementById('age-bubble-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">Age group bubble chart - Coming soon with full implementation</p>';
+        }
+
+        function updateCountySpecific(county) {
+            if (county === 'all') {
+                document.getElementById('county-specific-section').style.display = 'none';
+                return;
+            }
+            
+            document.getElementById('county-specific-section').style.display = 'block';
+            document.getElementById('selected-county-name').textContent = county;
+            document.getElementById('insight-text').textContent = `Detailed analysis for ${county} County is being generated...`;
+            document.getElementById('county-age-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">County age analysis - Coming soon</p>';
+            document.getElementById('county-race-chart').innerHTML = '<p style="text-align: center; color: #7a4a47; padding: 2rem;">County race analysis - Coming soon</p>';
+        }
+
         function updateDashboard(year) {
             renderMap(year);
             renderAgeChart(year);
@@ -776,14 +1033,30 @@
                 const processed = processData(csvData);
                 allData = processed.countyData;
                 stateData = processed.stateDataByYear;
+                countyDataAllYears = processed.allCountyData;
                 
                 const yearSelect = document.getElementById('year-select');
+                const countySelect = document.getElementById('county-select');
+                
                 updateDashboard(yearSelect.value);
                 renderAgeHeatmap();
                 renderRaceHeatmap();
                 
+                // Render new sections
+                renderCountyTrends();
+                renderCountyRanking();
+                renderCountyClustering();
+                renderPopulationWeighted();
+                renderTeenBirths();
+                renderAdvancedAge();
+                renderAgeBubble();
+                
                 yearSelect.addEventListener('change', (e) => {
                     updateDashboard(e.target.value);
+                });
+                
+                countySelect.addEventListener('change', (e) => {
+                    updateCountySpecific(e.target.value);
                 });
             }
         }
