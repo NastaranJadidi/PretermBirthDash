@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Utah Preterm Births Dashboard</title>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Crimson+Pro:wght@600;700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap');
         
         * {
             margin: 0;
@@ -15,267 +15,432 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(180deg, #1e1b2e 0%, #2d1b3d 100%);
-            min-height: 100vh;
+            background: #1a1a1a;
             color: white;
-            padding: 2rem;
+            overflow-x: hidden;
         }
 
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
+        .dashboard-container {
+            display: grid;
+            grid-template-rows: auto 1fr;
+            height: 100vh;
         }
 
-        .header {
-            text-align: center;
-            margin-bottom: 3rem;
+        /* Header */
+        .dashboard-header {
+            background: #2a2a2a;
+            padding: 1.5rem 2rem;
+            border-bottom: 2px solid #3a3a3a;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
         }
 
-        .title {
-            font-family: 'Crimson Pro', serif;
-            font-size: 3rem;
-            margin-bottom: 0.5rem;
-            background: linear-gradient(135deg, #fce7f3 0%, #ddd6fe 100%);
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
+        .title-section h1 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            margin-bottom: 0.25rem;
         }
 
-        .subtitle {
-            color: #a78bfa;
-            font-size: 1.1rem;
-            font-style: italic;
+        .title-section p {
+            color: #999;
+            font-size: 0.9rem;
         }
 
-        .year-selector {
-            text-align: center;
-            margin-bottom: 3rem;
-            padding: 2rem;
-            background: rgba(30, 41, 59, 0.5);
-            border-radius: 16px;
+        .year-control {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
         }
 
-        .year-selector label {
-            color: #d8b4fe;
-            margin-right: 1rem;
-            font-size: 1.1rem;
+        .year-control label {
+            color: #ccc;
+            font-size: 0.95rem;
             font-weight: 600;
         }
 
-        .year-selector select {
-            padding: 0.75rem 2rem;
-            background: rgba(88, 28, 135, 0.6);
-            border: 2px solid #ec4899;
-            border-radius: 8px;
+        .year-control select {
+            padding: 0.5rem 1.5rem;
+            background: #3a3a3a;
+            border: 1px solid #555;
+            border-radius: 6px;
             color: white;
-            font-size: 1.1rem;
-            font-weight: 600;
+            font-size: 1rem;
             cursor: pointer;
+            transition: all 0.2s;
         }
 
-        .map-container {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            border-radius: 16px;
+        .year-control select:hover {
+            background: #4a4a4a;
+            border-color: #666;
+        }
+
+        /* Main Content */
+        .dashboard-main {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            height: calc(100vh - 90px);
+            gap: 0;
+        }
+
+        /* Left Side - Map */
+        .map-section {
+            background: #242424;
+            border-right: 2px solid #3a3a3a;
             padding: 2rem;
-            margin-bottom: 2rem;
+            display: flex;
+            flex-direction: column;
         }
 
         .map-title {
-            text-align: center;
-            color: #fce7f3;
-            font-size: 2rem;
-            margin-bottom: 2rem;
+            font-size: 1.2rem;
+            font-weight: 600;
+            margin-bottom: 1.5rem;
+            color: #fff;
         }
 
-        svg {
-            width: 100%;
-            height: auto;
-        }
-
-        .county-circle {
-            cursor: pointer;
-            transition: all 0.3s ease;
-        }
-
-        .county-circle:hover {
-            filter: brightness(1.2);
-        }
-
-        .county-text {
-            pointer-events: none;
-            fill: white;
-            font-weight: 700;
-        }
-
-        .legend {
+        .map-container {
+            flex: 1;
             display: flex;
+            align-items: center;
             justify-content: center;
-            gap: 2rem;
-            margin-top: 2rem;
-            flex-wrap: wrap;
+            position: relative;
+        }
+
+        .map-legend {
+            margin-top: 1.5rem;
+            padding: 1rem;
+            background: #2a2a2a;
+            border-radius: 8px;
+        }
+
+        .legend-title {
+            font-size: 0.85rem;
+            font-weight: 600;
+            margin-bottom: 0.75rem;
+            color: #ccc;
+        }
+
+        .legend-items {
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
         }
 
         .legend-item {
             display: flex;
             align-items: center;
             gap: 0.5rem;
-            color: #d8b4fe;
+            font-size: 0.8rem;
+            color: #999;
         }
 
         .legend-color {
-            width: 20px;
-            height: 20px;
+            width: 16px;
+            height: 16px;
             border-radius: 50%;
             border: 2px solid rgba(255, 255, 255, 0.3);
         }
 
+        /* Right Side - Visualizations */
+        .viz-section {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            grid-template-rows: 1fr 1fr;
+            gap: 2px;
+            background: #3a3a3a;
+        }
+
+        .viz-panel {
+            background: #242424;
+            padding: 1.5rem;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .viz-header {
+            margin-bottom: 1rem;
+        }
+
+        .viz-header h3 {
+            font-size: 1rem;
+            font-weight: 600;
+            color: #fff;
+            margin-bottom: 0.25rem;
+        }
+
+        .viz-header p {
+            font-size: 0.8rem;
+            color: #999;
+        }
+
+        .viz-content {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+        }
+
+        /* SVG Styles */
+        svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .county-circle {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .county-circle:hover {
+            filter: brightness(1.3);
+        }
+
+        .county-text {
+            pointer-events: none;
+            fill: white;
+            font-weight: 600;
+        }
+
+        /* Bar Chart Styles */
+        .bar {
+            transition: all 0.3s ease;
+        }
+
+        .bar:hover {
+            opacity: 0.8;
+        }
+
+        .axis-label {
+            fill: #999;
+            font-size: 11px;
+        }
+
+        .axis-line {
+            stroke: #555;
+            stroke-width: 1;
+        }
+
+        /* Heatmap Styles */
+        .heatmap-cell {
+            cursor: pointer;
+            transition: all 0.2s ease;
+        }
+
+        .heatmap-cell:hover {
+            stroke: white;
+            stroke-width: 2;
+        }
+
+        .heatmap-text {
+            fill: white;
+            font-size: 10px;
+            font-weight: 600;
+            pointer-events: none;
+        }
+
+        .heatmap-label {
+            fill: #ccc;
+            font-size: 11px;
+        }
+
+        /* Loading State */
         .loading {
             text-align: center;
-            color: #fce7f3;
-            padding: 3rem;
-            font-size: 1.2rem;
+            color: #999;
+            padding: 2rem;
         }
 
         .error {
             text-align: center;
-            color: #fca5a5;
-            padding: 2rem;
-            background: rgba(220, 38, 38, 0.1);
+            color: #ff6b6b;
+            padding: 1rem;
+            background: rgba(255, 107, 107, 0.1);
             border-radius: 8px;
-            border: 1px solid rgba(220, 38, 38, 0.3);
+            font-size: 0.9rem;
         }
 
-        .stats-grid {
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 1.5rem;
-            margin-bottom: 3rem;
+        /* Tooltip */
+        .tooltip {
+            position: fixed;
+            background: rgba(0, 0, 0, 0.95);
+            color: white;
+            padding: 0.75rem 1rem;
+            border-radius: 6px;
+            font-size: 0.85rem;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.2s;
+            z-index: 1000;
+            border: 1px solid #555;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
         }
 
-        .stat-card {
-            background: rgba(30, 41, 59, 0.5);
-            border: 1px solid rgba(148, 163, 184, 0.1);
-            border-radius: 12px;
-            padding: 1.5rem;
-            text-align: center;
-            transition: all 0.3s ease;
+        .tooltip.show {
+            opacity: 1;
         }
 
-        .stat-card:hover {
-            transform: translateY(-4px);
-            border-color: rgba(236, 72, 153, 0.4);
-            box-shadow: 0 12px 32px rgba(236, 72, 153, 0.3);
+        .tooltip-title {
+            font-weight: 600;
+            margin-bottom: 0.25rem;
         }
 
-        .stat-number {
-            font-size: 2.5rem;
-            font-weight: 700;
-            color: #ec4899;
-            margin-bottom: 0.5rem;
-        }
-
-        .stat-label {
-            color: #d8b4fe;
-            font-size: 0.95rem;
-        }
-
-        .data-note {
-            background: rgba(139, 92, 246, 0.1);
-            border-left: 4px solid #a78bfa;
-            padding: 1.5rem;
-            border-radius: 8px;
-            margin-top: 3rem;
-            color: #e9d5ff;
-        }
-
-        .data-note h3 {
-            color: #fce7f3;
-            margin-bottom: 0.5rem;
+        .tooltip-value {
+            color: #aaa;
+            font-size: 0.8rem;
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <div class="header">
-            <h1 class="title">Utah Preterm Births Dashboard</h1>
-            <p class="subtitle">32-33 Weeks Gestation (2008-2012)</p>
-        </div>
-
-        <div class="year-selector">
-            <label for="year-select">Select Year:</label>
-            <select id="year-select">
-                <option value="2012" selected>2012</option>
-                <option value="2011">2011</option>
-                <option value="2010">2010</option>
-                <option value="2009">2009</option>
-                <option value="2008">2008</option>
-            </select>
-        </div>
-
-        <div id="stats-container" class="stats-grid">
-            <div class="loading">Loading statistics...</div>
-        </div>
-
-        <div class="map-container">
-            <h2 class="map-title" id="map-title">Utah Counties - Loading...</h2>
-            <div id="map-content">
-                <div class="loading">Loading map data...</div>
+    <div class="dashboard-container">
+        <!-- Header -->
+        <div class="dashboard-header">
+            <div class="title-section">
+                <h1>Utah Preterm Births Analysis</h1>
+                <p>32-33 Weeks Gestation • 2008-2012 • County-Level Data</p>
             </div>
-            <div class="legend">
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #6ee7b7;"></div>
-                    <span>Low (&lt;1.0%)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #fcd34d;"></div>
-                    <span>Moderate (1.0-1.3%)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #fdba74;"></div>
-                    <span>Elevated (1.3-1.7%)</span>
-                </div>
-                <div class="legend-item">
-                    <div class="legend-color" style="background: #fca5a5;"></div>
-                    <span>High (&gt;1.7%)</span>
-                </div>
+            <div class="year-control">
+                <label for="year-select">Year:</label>
+                <select id="year-select">
+                    <option value="2012" selected>2012</option>
+                    <option value="2011">2011</option>
+                    <option value="2010">2010</option>
+                    <option value="2009">2009</option>
+                    <option value="2008">2008</option>
+                </select>
             </div>
         </div>
 
-        <div class="data-note">
-            <h3>📊 About This Data</h3>
-            <p>This dashboard displays county-level preterm birth data for Utah from 2008-2012. Data represents births at 32-33 weeks gestation, which require specialized medical care but typically have positive outcomes with proper treatment.</p>
-            <p style="margin-top: 0.5rem;"><strong>Note:</strong> Earlier years (2003-2007) only have aggregated multi-year data in the source dataset and are not shown here.</p>
+        <!-- Main Dashboard -->
+        <div class="dashboard-main">
+            <!-- Left: Map -->
+            <div class="map-section">
+                <h2 class="map-title">Geographic Distribution</h2>
+                <div class="map-container" id="map-container">
+                    <div class="loading">Loading map...</div>
+                </div>
+                <div class="map-legend">
+                    <div class="legend-title">Preterm Birth Rate</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #4ade80;"></div>
+                            <span>Low (&lt;1.0%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fbbf24;"></div>
+                            <span>Moderate (1.0-1.3%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #fb923c;"></div>
+                            <span>Elevated (1.3-1.7%)</span>
+                        </div>
+                        <div class="legend-item">
+                            <div class="legend-color" style="background: #f87171;"></div>
+                            <span>High (&gt;1.7%)</span>
+                        </div>
+                    </div>
+                    <div class="legend-title" style="margin-top: 1rem;">Circle Size</div>
+                    <div class="legend-items">
+                        <div class="legend-item">
+                            <span>Proportional to total births</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Right: 4 Visualizations -->
+            <div class="viz-section">
+                <!-- Top Left: Age Distribution -->
+                <div class="viz-panel">
+                    <div class="viz-header">
+                        <h3>Preterm Births by Maternal Age</h3>
+                        <p>Rate by age group</p>
+                    </div>
+                    <div class="viz-content" id="age-chart">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Top Right: Race Distribution -->
+                <div class="viz-panel">
+                    <div class="viz-header">
+                        <h3>Preterm Births by Race/Ethnicity</h3>
+                        <p>Rate by demographic group</p>
+                    </div>
+                    <div class="viz-content" id="race-chart">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Bottom Left: Age Heatmap -->
+                <div class="viz-panel">
+                    <div class="viz-header">
+                        <h3>Age Group Trends</h3>
+                        <p>Cases by year and age</p>
+                    </div>
+                    <div class="viz-content" id="age-heatmap">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+
+                <!-- Bottom Right: Race Heatmap -->
+                <div class="viz-panel">
+                    <div class="viz-header">
+                        <h3>Race/Ethnicity Trends</h3>
+                        <p>Cases by year and demographic</p>
+                    </div>
+                    <div class="viz-content" id="race-heatmap">
+                        <div class="loading">Loading...</div>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
 
+    <!-- Tooltip -->
+    <div class="tooltip" id="tooltip"></div>
+
     <script>
-        // CSV file name
         const CSV_URL = 'Preterm_Births_32-33_Weeks_Gestation_Counties_In_Utah_2003-2012_20260122.csv';
         
-        // County position mapping for visualization
         const COUNTY_POSITIONS = {
-            'Utah - Cache': { x: 52, y: 25, name: 'Cache' },
-            'Utah - Weber': { x: 52, y: 42, name: 'Weber' },
-            'Utah - Davis': { x: 50, y: 48, name: 'Davis' },
-            'Utah - Salt Lake': { x: 50, y: 55, name: 'Salt Lake' },
+            'Utah - Cache': { x: 52, y: 15, name: 'Cache' },
+            'Utah - Weber': { x: 52, y: 30, name: 'Weber' },
+            'Utah - Davis': { x: 50, y: 38, name: 'Davis' },
+            'Utah - Salt Lake': { x: 50, y: 50, name: 'Salt Lake' },
             'Utah - Utah': { x: 50, y: 65, name: 'Utah' },
-            'Utah - Washington': { x: 25, y: 85, name: 'Washington' },
-            'Utah - Box Elder': { x: 52, y: 30, name: 'Box Elder' },
-            'Utah - Tooele': { x: 35, y: 55, name: 'Tooele' },
-            'Utah - Iron': { x: 25, y: 75, name: 'Iron' },
+            'Utah - Washington': { x: 25, y: 90, name: 'Washington' },
+            'Utah - Box Elder': { x: 52, y: 22, name: 'Box Elder' },
+            'Utah - Tooele': { x: 35, y: 50, name: 'Tooele' },
+            'Utah - Iron': { x: 25, y: 80, name: 'Iron' },
             'Utah - Sevier': { x: 40, y: 70, name: 'Sevier' },
-            'Utah - Uintah': { x: 70, y: 45, name: 'Uintah' }
+            'Utah - Uintah': { x: 75, y: 40, name: 'Uintah' }
         };
 
         let allData = {};
+        let stateData = {};
 
         function getColorForRate(rate) {
-            if (!rate) return '#e5e7eb';
+            if (!rate) return '#666';
             const rateNum = parseFloat(rate);
-            if (rateNum < 1.0) return '#6ee7b7';
-            if (rateNum < 1.3) return '#fcd34d';
-            if (rateNum < 1.7) return '#fdba74';
-            return '#fca5a5';
+            if (rateNum < 1.0) return '#4ade80';
+            if (rateNum < 1.3) return '#fbbf24';
+            if (rateNum < 1.7) return '#fb923c';
+            return '#f87171';
+        }
+
+        function showTooltip(text, x, y) {
+            const tooltip = document.getElementById('tooltip');
+            tooltip.innerHTML = text;
+            tooltip.style.left = x + 10 + 'px';
+            tooltip.style.top = y + 10 + 'px';
+            tooltip.classList.add('show');
+        }
+
+        function hideTooltip() {
+            document.getElementById('tooltip').classList.remove('show');
         }
 
         async function loadCSV() {
@@ -285,23 +450,13 @@
                 const csvText = await response.text();
                 return parseCSV(csvText);
             } catch (error) {
-                console.error('Error loading CSV:', error);
-                document.getElementById('map-content').innerHTML = `
-                    <div class="error">
-                        <h3>Error Loading Data</h3>
-                        <p>Could not load CSV file. Make sure it's in the same directory as this HTML file.</p>
-                        <p style="font-size: 0.9rem; margin-top: 1rem;">Looking for: ${CSV_URL}</p>
-                        <p style="font-size: 0.85rem; margin-top: 0.5rem;">Error: ${error.message}</p>
-                    </div>
-                `;
+                console.error('Error:', error);
                 return null;
             }
         }
 
         function parseCSV(csvText) {
             const lines = csvText.trim().split('\n');
-            
-            // Parse first line to get headers
             const firstLine = lines[0];
             const headers = [];
             let inQuotes = false;
@@ -320,7 +475,6 @@
             }
             headers.push(currentField.trim());
             
-            // Parse data rows
             const data = [];
             for (let i = 1; i < lines.length; i++) {
                 if (lines[i].trim() === '') continue;
@@ -351,12 +505,12 @@
                 data.push(row);
             }
             
-            console.log(`Parsed ${data.length} rows`);
             return { headers, data };
         }
 
         function processData(csvData) {
-            const processed = {};
+            const countyData = {};
+            const stateDataByYear = {};
             const validYears = ['2008', '2009', '2010', '2011', '2012'];
             
             csvData.data.forEach(row => {
@@ -367,164 +521,339 @@
                 const numericValue = row['Numeric Value'];
                 const numerator = row['Numerator'];
                 const denominator = row['Denominator'];
+                const age = row['Age'];
+                const raceEthnicity = row['Race Ethnicity'];
                 
-                // Only process county-level data with "Total" dimension
-                if (localeLevel !== 'County' || dimensionList !== 'Total') return;
-                if (numericValue === 'DSU' || !numericValue || numericValue === '') return;
-                
-                // Only process single years 2008-2012 (skip multi-year ranges)
                 if (!validYears.includes(timeframe)) return;
+                if (numericValue === 'DSU' || !numericValue || numericValue === '') return;
                 
                 const year = timeframe;
                 
-                if (!processed[year]) {
-                    processed[year] = {};
+                // Process COUNTY data
+                if (localeLevel === 'County' && dimensionList === 'Total') {
+                    const position = COUNTY_POSITIONS[locale];
+                    if (!position) return;
+                    
+                    if (!countyData[year]) countyData[year] = {};
+                    
+                    const cleanNumerator = numerator.replace(/,/g, '');
+                    const cleanDenominator = denominator.replace(/,/g, '');
+                    
+                    countyData[year][locale] = {
+                        rate: parseFloat(numericValue.replace('%', '')),
+                        count: parseInt(cleanNumerator) || 0,
+                        totalBirths: parseInt(cleanDenominator) || 0,
+                        x: position.x,
+                        y: position.y,
+                        name: position.name
+                    };
                 }
                 
-                const position = COUNTY_POSITIONS[locale];
-                if (!position) return;
-                
-                // Remove commas and parse numbers
-                const cleanNumerator = numerator.replace(/,/g, '');
-                const cleanDenominator = denominator.replace(/,/g, '');
-                
-                processed[year][locale] = {
-                    rate: parseFloat(numericValue.replace('%', '')),
-                    count: parseInt(cleanNumerator) || 0,
-                    totalBirths: parseInt(cleanDenominator) || 0,
-                    x: position.x,
-                    y: position.y,
-                    name: position.name
-                };
+                // Process STATE-level data for age and race
+                if (localeLevel === 'State' && locale === 'Utah') {
+                    if (!stateDataByYear[year]) {
+                        stateDataByYear[year] = {
+                            age: {},
+                            race: {}
+                        };
+                    }
+                    
+                    // Age groups
+                    if (age && age !== '' && !raceEthnicity) {
+                        const ageGroup = age.replace('Aged ', '').replace(' years', '').replace(' (Of mother)', '').trim();
+                        if (!stateDataByYear[year].age[ageGroup]) {
+                            const cleanNum = numerator.replace(/,/g, '');
+                            const cleanDenom = denominator.replace(/,/g, '');
+                            stateDataByYear[year].age[ageGroup] = {
+                                rate: parseFloat(numericValue.replace('%', '')),
+                                count: parseInt(cleanNum) || 0,
+                                total: parseInt(cleanDenom) || 0
+                            };
+                        }
+                    }
+                    
+                    // Race/ethnicity groups
+                    if (raceEthnicity && raceEthnicity !== '' && dimensionList.includes(raceEthnicity)) {
+                        if (!stateDataByYear[year].race[raceEthnicity]) {
+                            const cleanNum = numerator.replace(/,/g, '');
+                            const cleanDenom = denominator.replace(/,/g, '');
+                            stateDataByYear[year].race[raceEthnicity] = {
+                                rate: parseFloat(numericValue.replace('%', '')),
+                                count: parseInt(cleanNum) || 0,
+                                total: parseInt(cleanDenom) || 0
+                            };
+                        }
+                    }
+                }
             });
             
-            console.log('Years with data:', Object.keys(processed).sort());
-            return processed;
-        }
-
-        function renderStats(year) {
-            const yearData = allData[year];
-            if (!yearData || Object.keys(yearData).length === 0) {
-                document.getElementById('stats-container').innerHTML = `
-                    <div class="error">No data available for year ${year}</div>
-                `;
-                return;
-            }
-
-            // Calculate totals
-            let totalCases = 0;
-            let totalBirths = 0;
-            let rates = [];
-
-            Object.values(yearData).forEach(county => {
-                totalCases += county.count;
-                totalBirths += county.totalBirths;
-                rates.push(county.rate);
-            });
-
-            const avgRate = (totalCases / totalBirths * 100).toFixed(2);
-            const maxRate = Math.max(...rates).toFixed(1);
-            const numCounties = Object.keys(yearData).length;
-
-            document.getElementById('stats-container').innerHTML = `
-                <div class="stat-card">
-                    <div class="stat-number">${totalCases}</div>
-                    <div class="stat-label">Total Cases</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${totalBirths.toLocaleString()}</div>
-                    <div class="stat-label">Total Births</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${avgRate}%</div>
-                    <div class="stat-label">Overall Rate</div>
-                </div>
-                <div class="stat-card">
-                    <div class="stat-number">${numCounties}</div>
-                    <div class="stat-label">Counties Tracked</div>
-                </div>
-            `;
+            return { countyData, stateDataByYear };
         }
 
         function renderMap(year) {
             const yearData = allData[year];
-            
             if (!yearData || Object.keys(yearData).length === 0) {
-                document.getElementById('map-content').innerHTML = `
-                    <div class="error">No data available for year ${year}</div>
-                `;
+                document.getElementById('map-container').innerHTML = '<div class="error">No data for ' + year + '</div>';
                 return;
             }
 
-            document.getElementById('map-title').textContent = `Utah Counties - ${year}`;
+            // Calculate circle size based on population
+            const maxBirths = Math.max(...Object.values(yearData).map(d => d.totalBirths));
+            const minBirths = Math.min(...Object.values(yearData).map(d => d.totalBirths));
 
             const svg = `
-                <svg viewBox="0 0 800 1000" xmlns="http://www.w3.org/2000/svg">
+                <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="max-width: 350px;">
                     <!-- Utah state outline -->
-                    <path d="M 240 80 L 560 80 L 560 920 L 240 920 L 240 720 L 160 720 L 160 320 L 240 320 Z" 
-                          fill="rgba(236, 72, 153, 0.08)" 
-                          stroke="rgba(236, 72, 153, 0.4)" 
-                          stroke-width="2"/>
-                    
-                    <!-- Grid lines -->
-                    <line x1="160" y1="320" x2="560" y2="320" stroke="rgba(236, 72, 153, 0.15)" stroke-width="1" stroke-dasharray="5,5" />
-                    <line x1="160" y1="520" x2="560" y2="520" stroke="rgba(236, 72, 153, 0.15)" stroke-width="1" stroke-dasharray="5,5" />
-                    <line x1="160" y1="720" x2="560" y2="720" stroke="rgba(236, 72, 153, 0.15)" stroke-width="1" stroke-dasharray="5,5" />
+                    <path d="M 30 5 L 70 5 L 70 110 L 30 110 L 30 85 L 20 85 L 20 30 L 30 30 Z" 
+                          fill="rgba(255, 255, 255, 0.05)" 
+                          stroke="rgba(255, 255, 255, 0.2)" 
+                          stroke-width="0.5"/>
                     
                     ${Object.entries(yearData).map(([locale, data]) => {
-                        const cx = (data.x / 100) * 800;
-                        const cy = (data.y / 100) * 1000;
-                        const r = 60;
+                        const cx = data.x;
+                        const cy = data.y;
+                        // Scale radius based on population (5 to 12)
+                        const r = 5 + ((data.totalBirths - minBirths) / (maxBirths - minBirths)) * 7;
                         const color = getColorForRate(data.rate);
                         
                         return `
-                            <g class="county-circle" data-county="${data.name}" data-rate="${data.rate}" data-count="${data.count}">
-                                <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.9" 
-                                        stroke="rgba(255, 255, 255, 0.4)" stroke-width="3"/>
-                                <text x="${cx}" y="${cy - 10}" text-anchor="middle" class="county-text" font-size="24">${data.rate.toFixed(1)}%</text>
-                                <text x="${cx}" y="${cy + 12}" text-anchor="middle" class="county-text" font-size="14">${data.name}</text>
-                                <text x="${cx}" y="${cy + 30}" text-anchor="middle" class="county-text" font-size="12" opacity="0.8">${data.count} cases</text>
+                            <g class="county-circle" 
+                               onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${data.name} County</div><div class=\\"tooltip-value\\">Rate: ${data.rate.toFixed(1)}%<br>Cases: ${data.count}<br>Total Births: ${data.totalBirths.toLocaleString()}</div>', event.pageX, event.pageY)"
+                               onmouseleave="hideTooltip()">
+                                <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.85" 
+                                        stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
+                                <text x="${cx}" y="${cy + 1}" text-anchor="middle" class="county-text" font-size="3">${data.rate.toFixed(1)}%</text>
                             </g>
                         `;
                     }).join('')}
                 </svg>
             `;
             
-            document.getElementById('map-content').innerHTML = svg;
-            
-            // Add hover effects
-            document.querySelectorAll('.county-circle').forEach(circle => {
-                circle.addEventListener('mouseenter', function() {
-                    const circleEl = this.querySelector('circle');
-                    const currentR = circleEl.getAttribute('r');
-                    circleEl.setAttribute('data-original-r', currentR);
-                    circleEl.setAttribute('r', parseFloat(currentR) * 1.2);
-                });
+            document.getElementById('map-container').innerHTML = svg;
+        }
 
-                circle.addEventListener('mouseleave', function() {
-                    const circleEl = this.querySelector('circle');
-                    const originalR = circleEl.getAttribute('data-original-r');
-                    circleEl.setAttribute('r', originalR);
-                });
+        function renderAgeChart(year) {
+            const data = stateData[year]?.age;
+            if (!data) {
+                document.getElementById('age-chart').innerHTML = '<div class="error">No age data</div>';
+                return;
+            }
+
+            // Filter and sort age groups
+            const ageGroups = ['15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
+            const chartData = ageGroups
+                .filter(ag => data[ag])
+                .map(ag => ({ age: ag, ...data[ag] }));
+
+            if (chartData.length === 0) {
+                document.getElementById('age-chart').innerHTML = '<div class="error">No data</div>';
+                return;
+            }
+
+            const maxRate = Math.max(...chartData.map(d => d.rate));
+            const barHeight = 35;
+            const padding = { top: 10, right: 60, bottom: 25, left: 80 };
+            const chartHeight = chartData.length * barHeight + padding.top + padding.bottom;
+            const chartWidth = 500;
+
+            const svg = `
+                <svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">
+                    ${chartData.map((d, i) => {
+                        const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
+                        const y = padding.top + i * barHeight;
+                        
+                        return `
+                            <g class="bar"
+                               onmouseenter="showTooltip('<div class=\\"tooltip-title\\">Age ${d.age}</div><div class=\\"tooltip-value\\">Rate: ${d.rate.toFixed(1)}%<br>Cases: ${d.count}</div>', event.pageX, event.pageY)"
+                               onmouseleave="hideTooltip()">
+                                <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${d.age}</text>
+                                <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
+                                      fill="${getColorForRate(d.rate)}" rx="3"/>
+                                <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
+                            </g>
+                        `;
+                    }).join('')}
+                    <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/>
+                </svg>
+            `;
+            
+            document.getElementById('age-chart').innerHTML = svg;
+        }
+
+        function renderRaceChart(year) {
+            const data = stateData[year]?.race;
+            if (!data) {
+                document.getElementById('race-chart').innerHTML = '<div class="error">No race data</div>';
+                return;
+            }
+
+            const chartData = Object.entries(data)
+                .map(([race, values]) => ({ race, ...values }))
+                .sort((a, b) => b.rate - a.rate);
+
+            if (chartData.length === 0) {
+                document.getElementById('race-chart').innerHTML = '<div class="error">No data</div>';
+                return;
+            }
+
+            const maxRate = Math.max(...chartData.map(d => d.rate));
+            const barHeight = 35;
+            const padding = { top: 10, right: 60, bottom: 25, left: 180 };
+            const chartHeight = chartData.length * barHeight + padding.top + padding.bottom;
+            const chartWidth = 500;
+
+            const svg = `
+                <svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">
+                    ${chartData.map((d, i) => {
+                        const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
+                        const y = padding.top + i * barHeight;
+                        const displayName = d.race.length > 20 ? d.race.substring(0, 17) + '...' : d.race;
+                        
+                        return `
+                            <g class="bar"
+                               onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${d.race}</div><div class=\\"tooltip-value\\">Rate: ${d.rate.toFixed(1)}%<br>Cases: ${d.count}</div>', event.pageX, event.pageY)"
+                               onmouseleave="hideTooltip()">
+                                <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${displayName}</text>
+                                <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
+                                      fill="${getColorForRate(d.rate)}" rx="3"/>
+                                <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
+                            </g>
+                        `;
+                    }).join('')}
+                    <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/>
+                </svg>
+            `;
+            
+            document.getElementById('race-chart').innerHTML = svg;
+        }
+
+        function renderAgeHeatmap() {
+            // Collect all years' age data
+            const years = ['2008', '2009', '2010', '2011', '2012'];
+            const ageGroups = ['15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
+            
+            const heatmapData = years.map(year => {
+                const yearData = stateData[year]?.age || {};
+                return ageGroups.map(ag => yearData[ag]?.count || 0);
             });
+
+            const maxValue = Math.max(...heatmapData.flat());
+            const cellWidth = 60;
+            const cellHeight = 40;
+            const padding = { top: 30, right: 10, bottom: 10, left: 80 };
+            
+            const svg = `
+                <svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * ageGroups.length + padding.top + padding.bottom}" 
+                     xmlns="http://www.w3.org/2000/svg">
+                    ${years.map((year, i) => `
+                        <text x="${padding.left + i * cellWidth + cellWidth/2}" y="${padding.top - 10}" 
+                              text-anchor="middle" class="heatmap-label">${year}</text>
+                    `).join('')}
+                    ${ageGroups.map((ag, j) => `
+                        <text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
+                              text-anchor="end" class="heatmap-label">${ag}</text>
+                    `).join('')}
+                    ${heatmapData.map((yearData, i) => 
+                        yearData.map((value, j) => {
+                            const intensity = value / maxValue;
+                            const color = `rgba(239, 68, 68, ${intensity * 0.8 + 0.2})`;
+                            const x = padding.left + i * cellWidth;
+                            const y = padding.top + j * cellHeight;
+                            
+                            return `
+                                <g class="heatmap-cell"
+                                   onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${years[i]} - ${ageGroups[j]}</div><div class=\\"tooltip-value\\">Cases: ${value}</div>', event.pageX, event.pageY)"
+                                   onmouseleave="hideTooltip()">
+                                    <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
+                                          fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
+                                    <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
+                                          text-anchor="middle" class="heatmap-text">${value}</text>
+                                </g>
+                            `;
+                        }).join('')
+                    ).join('')}
+                </svg>
+            `;
+            
+            document.getElementById('age-heatmap').innerHTML = svg;
+        }
+
+        function renderRaceHeatmap() {
+            const years = ['2008', '2009', '2010', '2011', '2012'];
+            const races = ['White', 'Hispanic or Latino', 'Asian or Pacific Islander', 'Black or African American'];
+            
+            const heatmapData = years.map(year => {
+                const yearData = stateData[year]?.race || {};
+                return races.map(race => yearData[race]?.count || 0);
+            });
+
+            const maxValue = Math.max(...heatmapData.flat());
+            const cellWidth = 60;
+            const cellHeight = 40;
+            const padding = { top: 30, right: 10, bottom: 10, left: 140 };
+            
+            const svg = `
+                <svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * races.length + padding.top + padding.bottom}" 
+                     xmlns="http://www.w3.org/2000/svg">
+                    ${years.map((year, i) => `
+                        <text x="${padding.left + i * cellWidth + cellWidth/2}" y="${padding.top - 10}" 
+                              text-anchor="middle" class="heatmap-label">${year}</text>
+                    `).join('')}
+                    ${races.map((race, j) => {
+                        const displayName = race.length > 18 ? race.substring(0, 15) + '...' : race;
+                        return `
+                            <text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
+                                  text-anchor="end" class="heatmap-label">${displayName}</text>
+                        `;
+                    }).join('')}
+                    ${heatmapData.map((yearData, i) => 
+                        yearData.map((value, j) => {
+                            const intensity = value / maxValue;
+                            const color = `rgba(234, 179, 8, ${intensity * 0.8 + 0.2})`;
+                            const x = padding.left + i * cellWidth;
+                            const y = padding.top + j * cellHeight;
+                            
+                            return `
+                                <g class="heatmap-cell"
+                                   onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${years[i]} - ${races[j]}</div><div class=\\"tooltip-value\\">Cases: ${value}</div>', event.pageX, event.pageY)"
+                                   onmouseleave="hideTooltip()">
+                                    <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
+                                          fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
+                                    <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
+                                          text-anchor="middle" class="heatmap-text">${value}</text>
+                                </g>
+                            `;
+                        }).join('')
+                    ).join('')}
+                </svg>
+            `;
+            
+            document.getElementById('race-heatmap').innerHTML = svg;
+        }
+
+        function updateDashboard(year) {
+            renderMap(year);
+            renderAgeChart(year);
+            renderRaceChart(year);
         }
 
         async function init() {
             const csvData = await loadCSV();
             
             if (csvData) {
-                allData = processData(csvData);
-                console.log('Dashboard loaded with data for years:', Object.keys(allData).sort());
+                const processed = processData(csvData);
+                allData = processed.countyData;
+                stateData = processed.stateDataByYear;
+                
+                console.log('Data loaded:', { counties: Object.keys(allData), years: Object.keys(stateData) });
                 
                 const yearSelect = document.getElementById('year-select');
-                const currentYear = yearSelect.value;
-                
-                renderStats(currentYear);
-                renderMap(currentYear);
+                updateDashboard(yearSelect.value);
+                renderAgeHeatmap();
+                renderRaceHeatmap();
                 
                 yearSelect.addEventListener('change', (e) => {
-                    renderStats(e.target.value);
-                    renderMap(e.target.value);
+                    updateDashboard(e.target.value);
                 });
             }
         }
