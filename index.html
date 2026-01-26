@@ -90,6 +90,7 @@
             padding: 2rem;
             display: flex;
             flex-direction: column;
+            overflow-y: auto;
         }
 
         .map-title {
@@ -105,6 +106,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            min-height: 400px;
         }
 
         .map-legend {
@@ -156,7 +158,7 @@
             padding: 1.5rem;
             display: flex;
             flex-direction: column;
-            overflow: hidden;
+            overflow: auto;
         }
 
         .viz-header {
@@ -181,6 +183,7 @@
             align-items: center;
             justify-content: center;
             position: relative;
+            min-height: 200px;
         }
 
         /* SVG Styles */
@@ -207,9 +210,10 @@
         /* Bar Chart Styles */
         .bar {
             transition: all 0.3s ease;
+            cursor: pointer;
         }
 
-        .bar:hover {
+        .bar:hover rect {
             opacity: 0.8;
         }
 
@@ -229,7 +233,7 @@
             transition: all 0.2s ease;
         }
 
-        .heatmap-cell:hover {
+        .heatmap-cell:hover rect {
             stroke: white;
             stroke-width: 2;
         }
@@ -276,6 +280,7 @@
             z-index: 1000;
             border: 1px solid #555;
             box-shadow: 0 4px 12px rgba(0, 0, 0, 0.5);
+            max-width: 250px;
         }
 
         .tooltip.show {
@@ -421,6 +426,7 @@
 
         let allData = {};
         let stateData = {};
+        const tooltip = document.getElementById('tooltip');
 
         function getColorForRate(rate) {
             if (!rate) return '#666';
@@ -431,16 +437,15 @@
             return '#f87171';
         }
 
-        function showTooltip(text, x, y) {
-            const tooltip = document.getElementById('tooltip');
-            tooltip.innerHTML = text;
-            tooltip.style.left = x + 10 + 'px';
-            tooltip.style.top = y + 10 + 'px';
+        function showTooltip(html, event) {
+            tooltip.innerHTML = html;
+            tooltip.style.left = event.pageX + 10 + 'px';
+            tooltip.style.top = event.pageY + 10 + 'px';
             tooltip.classList.add('show');
         }
 
         function hideTooltip() {
-            document.getElementById('tooltip').classList.remove('show');
+            tooltip.classList.remove('show');
         }
 
         async function loadCSV() {
@@ -451,6 +456,7 @@
                 return parseCSV(csvText);
             } catch (error) {
                 console.error('Error:', error);
+                document.getElementById('map-container').innerHTML = '<div class="error">Could not load CSV file. Make sure it\'s in the same directory.</div>';
                 return null;
             }
         }
@@ -597,39 +603,50 @@
                 return;
             }
 
-            // Calculate circle size based on population
             const maxBirths = Math.max(...Object.values(yearData).map(d => d.totalBirths));
             const minBirths = Math.min(...Object.values(yearData).map(d => d.totalBirths));
 
-            const svg = `
+            let svgHTML = `
                 <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="max-width: 350px;">
-                    <!-- Utah state outline -->
                     <path d="M 30 5 L 70 5 L 70 110 L 30 110 L 30 85 L 20 85 L 20 30 L 30 30 Z" 
                           fill="rgba(255, 255, 255, 0.05)" 
                           stroke="rgba(255, 255, 255, 0.2)" 
                           stroke-width="0.5"/>
-                    
-                    ${Object.entries(yearData).map(([locale, data]) => {
-                        const cx = data.x;
-                        const cy = data.y;
-                        // Scale radius based on population (5 to 12)
-                        const r = 5 + ((data.totalBirths - minBirths) / (maxBirths - minBirths)) * 7;
-                        const color = getColorForRate(data.rate);
-                        
-                        return `
-                            <g class="county-circle" 
-                               onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${data.name} County</div><div class=\\"tooltip-value\\">Rate: ${data.rate.toFixed(1)}%<br>Cases: ${data.count}<br>Total Births: ${data.totalBirths.toLocaleString()}</div>', event.pageX, event.pageY)"
-                               onmouseleave="hideTooltip()">
-                                <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.85" 
-                                        stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
-                                <text x="${cx}" y="${cy + 1}" text-anchor="middle" class="county-text" font-size="3">${data.rate.toFixed(1)}%</text>
-                            </g>
-                        `;
-                    }).join('')}
-                </svg>
             `;
             
-            document.getElementById('map-container').innerHTML = svg;
+            Object.entries(yearData).forEach(([locale, data]) => {
+                const cx = data.x;
+                const cy = data.y;
+                const r = 5 + ((data.totalBirths - minBirths) / (maxBirths - minBirths)) * 7;
+                const color = getColorForRate(data.rate);
+                
+                svgHTML += `
+                    <g class="county-circle" data-county="${data.name}" data-rate="${data.rate}" data-count="${data.count}" data-births="${data.totalBirths}">
+                        <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.85" 
+                                stroke="rgba(255, 255, 255, 0.5)" stroke-width="0.5"/>
+                        <text x="${cx}" y="${cy + 1}" text-anchor="middle" class="county-text" font-size="3">${data.rate.toFixed(1)}%</text>
+                    </g>
+                `;
+            });
+            
+            svgHTML += '</svg>';
+            document.getElementById('map-container').innerHTML = svgHTML;
+            
+            // Add event listeners
+            document.querySelectorAll('.county-circle').forEach(circle => {
+                circle.addEventListener('mouseenter', function(e) {
+                    const name = this.dataset.county;
+                    const rate = this.dataset.rate;
+                    const count = this.dataset.count;
+                    const births = parseInt(this.dataset.births).toLocaleString();
+                    showTooltip(`<div class="tooltip-title">${name} County</div><div class="tooltip-value">Rate: ${parseFloat(rate).toFixed(1)}%<br>Cases: ${count}<br>Total Births: ${births}</div>`, e);
+                });
+                circle.addEventListener('mouseleave', hideTooltip);
+                circle.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+            });
         }
 
         function renderAgeChart(year) {
@@ -639,7 +656,6 @@
                 return;
             }
 
-            // Filter and sort age groups
             const ageGroups = ['15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
             const chartData = ageGroups
                 .filter(ag => data[ag])
@@ -656,28 +672,40 @@
             const chartHeight = chartData.length * barHeight + padding.top + padding.bottom;
             const chartWidth = 500;
 
-            const svg = `
-                <svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">
-                    ${chartData.map((d, i) => {
-                        const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
-                        const y = padding.top + i * barHeight;
-                        
-                        return `
-                            <g class="bar"
-                               onmouseenter="showTooltip('<div class=\\"tooltip-title\\">Age ${d.age}</div><div class=\\"tooltip-value\\">Rate: ${d.rate.toFixed(1)}%<br>Cases: ${d.count}</div>', event.pageX, event.pageY)"
-                               onmouseleave="hideTooltip()">
-                                <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${d.age}</text>
-                                <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
-                                      fill="${getColorForRate(d.rate)}" rx="3"/>
-                                <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
-                            </g>
-                        `;
-                    }).join('')}
-                    <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/>
-                </svg>
-            `;
+            let svgHTML = `<svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">`;
             
-            document.getElementById('age-chart').innerHTML = svg;
+            chartData.forEach((d, i) => {
+                const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
+                const y = padding.top + i * barHeight;
+                
+                svgHTML += `
+                    <g class="bar" data-age="${d.age}" data-rate="${d.rate}" data-count="${d.count}">
+                        <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${d.age}</text>
+                        <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
+                              fill="${getColorForRate(d.rate)}" rx="3"/>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
+                    </g>
+                `;
+            });
+            
+            svgHTML += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/></svg>`;
+            
+            document.getElementById('age-chart').innerHTML = svgHTML;
+            
+            // Add event listeners
+            document.querySelectorAll('#age-chart .bar').forEach(bar => {
+                bar.addEventListener('mouseenter', function(e) {
+                    const age = this.dataset.age;
+                    const rate = this.dataset.rate;
+                    const count = this.dataset.count;
+                    showTooltip(`<div class="tooltip-title">Age ${age}</div><div class="tooltip-value">Rate: ${parseFloat(rate).toFixed(1)}%<br>Cases: ${count}</div>`, e);
+                });
+                bar.addEventListener('mouseleave', hideTooltip);
+                bar.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+            });
         }
 
         function renderRaceChart(year) {
@@ -702,33 +730,44 @@
             const chartHeight = chartData.length * barHeight + padding.top + padding.bottom;
             const chartWidth = 500;
 
-            const svg = `
-                <svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">
-                    ${chartData.map((d, i) => {
-                        const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
-                        const y = padding.top + i * barHeight;
-                        const displayName = d.race.length > 20 ? d.race.substring(0, 17) + '...' : d.race;
-                        
-                        return `
-                            <g class="bar"
-                               onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${d.race}</div><div class=\\"tooltip-value\\">Rate: ${d.rate.toFixed(1)}%<br>Cases: ${d.count}</div>', event.pageX, event.pageY)"
-                               onmouseleave="hideTooltip()">
-                                <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${displayName}</text>
-                                <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
-                                      fill="${getColorForRate(d.rate)}" rx="3"/>
-                                <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
-                            </g>
-                        `;
-                    }).join('')}
-                    <line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/>
-                </svg>
-            `;
+            let svgHTML = `<svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">`;
             
-            document.getElementById('race-chart').innerHTML = svg;
+            chartData.forEach((d, i) => {
+                const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
+                const y = padding.top + i * barHeight;
+                const displayName = d.race.length > 20 ? d.race.substring(0, 17) + '...' : d.race;
+                
+                svgHTML += `
+                    <g class="bar" data-race="${d.race}" data-rate="${d.rate}" data-count="${d.count}">
+                        <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${displayName}</text>
+                        <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
+                              fill="${getColorForRate(d.rate)}" rx="3"/>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#ccc">${d.rate.toFixed(1)}%</text>
+                    </g>
+                `;
+            });
+            
+            svgHTML += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/></svg>`;
+            
+            document.getElementById('race-chart').innerHTML = svgHTML;
+            
+            // Add event listeners
+            document.querySelectorAll('#race-chart .bar').forEach(bar => {
+                bar.addEventListener('mouseenter', function(e) {
+                    const race = this.dataset.race;
+                    const rate = this.dataset.rate;
+                    const count = this.dataset.count;
+                    showTooltip(`<div class="tooltip-title">${race}</div><div class="tooltip-value">Rate: ${parseFloat(rate).toFixed(1)}%<br>Cases: ${count}</div>`, e);
+                });
+                bar.addEventListener('mouseleave', hideTooltip);
+                bar.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+            });
         }
 
         function renderAgeHeatmap() {
-            // Collect all years' age data
             const years = ['2008', '2009', '2010', '2011', '2012'];
             const ageGroups = ['15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
             
@@ -742,40 +781,54 @@
             const cellHeight = 40;
             const padding = { top: 30, right: 10, bottom: 10, left: 80 };
             
-            const svg = `
-                <svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * ageGroups.length + padding.top + padding.bottom}" 
-                     xmlns="http://www.w3.org/2000/svg">
-                    ${years.map((year, i) => `
-                        <text x="${padding.left + i * cellWidth + cellWidth/2}" y="${padding.top - 10}" 
-                              text-anchor="middle" class="heatmap-label">${year}</text>
-                    `).join('')}
-                    ${ageGroups.map((ag, j) => `
-                        <text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
-                              text-anchor="end" class="heatmap-label">${ag}</text>
-                    `).join('')}
-                    ${heatmapData.map((yearData, i) => 
-                        yearData.map((value, j) => {
-                            const intensity = value / maxValue;
-                            const color = `rgba(239, 68, 68, ${intensity * 0.8 + 0.2})`;
-                            const x = padding.left + i * cellWidth;
-                            const y = padding.top + j * cellHeight;
-                            
-                            return `
-                                <g class="heatmap-cell"
-                                   onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${years[i]} - ${ageGroups[j]}</div><div class=\\"tooltip-value\\">Cases: ${value}</div>', event.pageX, event.pageY)"
-                                   onmouseleave="hideTooltip()">
-                                    <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                          fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
-                                    <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
-                                          text-anchor="middle" class="heatmap-text">${value}</text>
-                                </g>
-                            `;
-                        }).join('')
-                    ).join('')}
-                </svg>
-            `;
+            let svgHTML = `<svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * ageGroups.length + padding.top + padding.bottom}" 
+                     xmlns="http://www.w3.org/2000/svg">`;
+                     
+            years.forEach((year, i) => {
+                svgHTML += `<text x="${padding.left + i * cellWidth + cellWidth/2}" y="${padding.top - 10}" 
+                          text-anchor="middle" class="heatmap-label">${year}</text>`;
+            });
             
-            document.getElementById('age-heatmap').innerHTML = svg;
+            ageGroups.forEach((ag, j) => {
+                svgHTML += `<text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
+                          text-anchor="end" class="heatmap-label">${ag}</text>`;
+            });
+            
+            heatmapData.forEach((yearData, i) => {
+                yearData.forEach((value, j) => {
+                    const intensity = value / maxValue;
+                    const color = `rgba(239, 68, 68, ${intensity * 0.8 + 0.2})`;
+                    const x = padding.left + i * cellWidth;
+                    const y = padding.top + j * cellHeight;
+                    
+                    svgHTML += `
+                        <g class="heatmap-cell" data-year="${years[i]}" data-age="${ageGroups[j]}" data-count="${value}">
+                            <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
+                                  fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
+                            <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
+                                  text-anchor="middle" class="heatmap-text">${value}</text>
+                        </g>
+                    `;
+                });
+            });
+            
+            svgHTML += '</svg>';
+            document.getElementById('age-heatmap').innerHTML = svgHTML;
+            
+            // Add event listeners
+            document.querySelectorAll('#age-heatmap .heatmap-cell').forEach(cell => {
+                cell.addEventListener('mouseenter', function(e) {
+                    const year = this.dataset.year;
+                    const age = this.dataset.age;
+                    const count = this.dataset.count;
+                    showTooltip(`<div class="tooltip-title">${year} - ${age}</div><div class="tooltip-value">Cases: ${count}</div>`, e);
+                });
+                cell.addEventListener('mouseleave', hideTooltip);
+                cell.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+            });
         }
 
         function renderRaceHeatmap() {
@@ -792,43 +845,55 @@
             const cellHeight = 40;
             const padding = { top: 30, right: 10, bottom: 10, left: 140 };
             
-            const svg = `
-                <svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * races.length + padding.top + padding.bottom}" 
-                     xmlns="http://www.w3.org/2000/svg">
-                    ${years.map((year, i) => `
-                        <text x="${padding.left + i * cellWidth + cellWidth/2}" y="${padding.top - 10}" 
-                              text-anchor="middle" class="heatmap-label">${year}</text>
-                    `).join('')}
-                    ${races.map((race, j) => {
-                        const displayName = race.length > 18 ? race.substring(0, 15) + '...' : race;
-                        return `
-                            <text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
-                                  text-anchor="end" class="heatmap-label">${displayName}</text>
-                        `;
-                    }).join('')}
-                    ${heatmapData.map((yearData, i) => 
-                        yearData.map((value, j) => {
-                            const intensity = value / maxValue;
-                            const color = `rgba(234, 179, 8, ${intensity * 0.8 + 0.2})`;
-                            const x = padding.left + i * cellWidth;
-                            const y = padding.top + j * cellHeight;
-                            
-                            return `
-                                <g class="heatmap-cell"
-                                   onmouseenter="showTooltip('<div class=\\"tooltip-title\\">${years[i]} - ${races[j]}</div><div class=\\"tooltip-value\\">Cases: ${value}</div>', event.pageX, event.pageY)"
-                                   onmouseleave="hideTooltip()">
-                                    <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                          fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
-                                    <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
-                                          text-anchor="middle" class="heatmap-text">${value}</text>
-                                </g>
-                            `;
-                        }).join('')
-                    ).join('')}
-                </svg>
-            `;
+            let svgHTML = `<svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * races.length + padding.top + padding.bottom}" 
+                     xmlns="http://www.w3.org/2000/svg">`;
+                     
+            years.forEach((year, i) => {
+                svgHTML += `<text x="${padding.left + i * cellWidth + cellWidth/2}" y="${padding.top - 10}" 
+                          text-anchor="middle" class="heatmap-label">${year}</text>`;
+            });
             
-            document.getElementById('race-heatmap').innerHTML = svg;
+            races.forEach((race, j) => {
+                const displayName = race.length > 18 ? race.substring(0, 15) + '...' : race;
+                svgHTML += `<text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
+                          text-anchor="end" class="heatmap-label">${displayName}</text>`;
+            });
+            
+            heatmapData.forEach((yearData, i) => {
+                yearData.forEach((value, j) => {
+                    const intensity = value / maxValue;
+                    const color = `rgba(234, 179, 8, ${intensity * 0.8 + 0.2})`;
+                    const x = padding.left + i * cellWidth;
+                    const y = padding.top + j * cellHeight;
+                    
+                    svgHTML += `
+                        <g class="heatmap-cell" data-year="${years[i]}" data-race="${races[j]}" data-count="${value}">
+                            <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
+                                  fill="${color}" stroke="#3a3a3a" stroke-width="1" rx="3"/>
+                            <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
+                                  text-anchor="middle" class="heatmap-text">${value}</text>
+                        </g>
+                    `;
+                });
+            });
+            
+            svgHTML += '</svg>';
+            document.getElementById('race-heatmap').innerHTML = svgHTML;
+            
+            // Add event listeners
+            document.querySelectorAll('#race-heatmap .heatmap-cell').forEach(cell => {
+                cell.addEventListener('mouseenter', function(e) {
+                    const year = this.dataset.year;
+                    const race = this.dataset.race;
+                    const count = this.dataset.count;
+                    showTooltip(`<div class="tooltip-title">${year} - ${race}</div><div class="tooltip-value">Cases: ${count}</div>`, e);
+                });
+                cell.addEventListener('mouseleave', hideTooltip);
+                cell.addEventListener('mousemove', function(e) {
+                    tooltip.style.left = e.pageX + 10 + 'px';
+                    tooltip.style.top = e.pageY + 10 + 'px';
+                });
+            });
         }
 
         function updateDashboard(year) {
@@ -845,7 +910,7 @@
                 allData = processed.countyData;
                 stateData = processed.stateDataByYear;
                 
-                console.log('Data loaded:', { counties: Object.keys(allData), years: Object.keys(stateData) });
+                console.log('Data loaded successfully');
                 
                 const yearSelect = document.getElementById('year-select');
                 updateDashboard(yearSelect.value);
