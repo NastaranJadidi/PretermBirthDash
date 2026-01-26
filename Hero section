@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Hero Section</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Crimson+Pro:wght@400;600;700&family=Inter:wght@400;500;600;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', sans-serif;
+            background: linear-gradient(180deg, #1e1b2e 0%, #2d1b3d 100%);
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+            color: white;
+        }
+
+        .hero-container {
+            text-align: center;
+            max-width: 900px;
+            padding: 3rem 2rem;
+            background: rgba(30, 41, 59, 0.3);
+            border-radius: 24px;
+            border: 1px solid rgba(148, 163, 184, 0.1);
+        }
+
+        .hero-kicker {
+            font-size: 0.9rem;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            color: #f472b6;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .hero-title {
+            font-family: 'Crimson Pro', serif;
+            font-size: 3.5rem;
+            font-weight: 700;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, #fce7f3 0%, #ddd6fe 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            line-height: 1.2;
+        }
+
+        .hero-number {
+            font-size: 6rem;
+            font-weight: 700;
+            color: #ec4899;
+            margin: 1.5rem 0;
+            text-shadow: 0 0 40px rgba(236, 72, 153, 0.6);
+            animation: pulse 2s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.05); }
+        }
+
+        .hero-subtitle {
+            font-size: 1.4rem;
+            color: #e9d5ff;
+            margin-bottom: 2rem;
+        }
+
+        .stats-row {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1.5rem;
+            margin-top: 2rem;
+        }
+
+        .stat-box {
+            background: rgba(15, 23, 42, 0.6);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid rgba(236, 72, 153, 0.2);
+            transition: all 0.3s ease;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-4px);
+            border-color: rgba(236, 72, 153, 0.5);
+            box-shadow: 0 12px 32px rgba(236, 72, 153, 0.3);
+        }
+
+        .stat-number {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: #ec4899;
+            margin-bottom: 0.5rem;
+        }
+
+        .stat-label {
+            font-size: 0.95rem;
+            color: #d8b4fe;
+            font-weight: 500;
+        }
+
+        .data-note {
+            margin-top: 2rem;
+            padding: 1.25rem;
+            background: rgba(236, 72, 153, 0.15);
+            border-left: 4px solid #ec4899;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            color: #fbbf24;
+            text-align: left;
+        }
+
+        .data-note strong {
+            color: #fcd34d;
+        }
+    </style>
+</head>
+<body>
+    <div class="hero-container">
+        <div class="hero-kicker">Utah Preterm Births • 32-33 Weeks Gestation</div>
+        <h1 class="hero-title">Year 2012 Overview</h1>
+        <div class="hero-number" id="heroNumber">0</div>
+        <div class="hero-subtitle">
+            Preterm births in 2012 • 1.2% of all births
+        </div>
+
+        <div class="stats-row">
+            <div class="stat-box">
+                <div class="stat-number">1.2%</div>
+                <div class="stat-label">Overall Rate</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number" id="totalBirths">0</div>
+                <div class="stat-label">Total Births</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">602</div>
+                <div class="stat-label">Preterm Cases</div>
+            </div>
+            <div class="stat-box">
+                <div class="stat-number">2.1%</div>
+                <div class="stat-label">Highest Age Group Rate</div>
+            </div>
+        </div>
+
+        <div class="data-note">
+            <strong>Important Note:</strong> This data tracks preterm births (babies born at 32-33 weeks gestation), 
+            not stillbirths. Preterm births require specialized medical care but most babies survive with proper treatment.
+        </div>
+    </div>
+
+    <script>
+        // Animate the main hero number
+        function animateNumber(element, target, duration) {
+            let start = 0;
+            const increment = target / (duration / 16);
+            
+            const timer = setInterval(() => {
+                start += increment;
+                if (start >= target) {
+                    element.textContent = target.toLocaleString();
+                    clearInterval(timer);
+                } else {
+                    element.textContent = Math.floor(start).toLocaleString();
+                }
+            }, 16);
+        }
+
+        // Run animation on page load
+        window.addEventListener('load', () => {
+            const heroNumber = document.getElementById('heroNumber');
+            const totalBirths = document.getElementById('totalBirths');
+            
+            setTimeout(() => {
+                animateNumber(heroNumber, 602, 1500);
+                animateNumber(totalBirths, 51463, 2000);
+            }, 300);
+        });
+    </script>
+</body>
+</html>
