@@ -657,7 +657,28 @@
                 const raceEthnicity = row['Race Ethnicity'];
                 
                 if (!validYears.includes(timeframe)) return;
-                if (numericValue === 'DSU' || !numericValue || numericValue === '') return;
+                
+                // Clean numerator/denominator early
+                const cleanNumerator = numerator ? numerator.replace(/,/g, '') : '';
+                const cleanDenominator = denominator ? denominator.replace(/,/g, '') : '';
+                const numCount = parseInt(cleanNumerator) || 0;
+                const numTotal = parseInt(cleanDenominator) || 0;
+                
+                // Skip only if BOTH numeric value AND numerator/denominator are missing
+                const hasNumericData = numCount > 0 && numTotal > 0;
+                const hasRateValue = numericValue && numericValue !== '' && numericValue !== 'DSU';
+                
+                if (!hasNumericData && !hasRateValue) return;
+                
+                // Calculate rate from numerator/denominator if rate is DSU
+                let actualRate;
+                if (hasRateValue) {
+                    actualRate = parseFloat(numericValue.replace('%', ''));
+                } else if (hasNumericData) {
+                    actualRate = (numCount / numTotal) * 100;
+                } else {
+                    return; // Skip if no valid data
+                }
                 
                 const year = timeframe;
                 
@@ -670,13 +691,10 @@
                     if (!allCountyData[position.name]) allCountyData[position.name] = {};
                     if (!allCountyData[position.name][year]) allCountyData[position.name][year] = {};
                     
-                    const cleanNumerator = numerator.replace(/,/g, '');
-                    const cleanDenominator = denominator.replace(/,/g, '');
-                    
                     const dataPoint = {
-                        rate: parseFloat(numericValue.replace('%', '')),
-                        count: parseInt(cleanNumerator) || 0,
-                        totalBirths: parseInt(cleanDenominator) || 0,
+                        rate: actualRate,
+                        count: numCount,
+                        totalBirths: numTotal,
                         x: position.x,
                         y: position.y,
                         name: position.name
@@ -708,12 +726,10 @@
                         }
                         
                         if (!stateDataByYear[year].age[ageGroup]) {
-                            const cleanNum = numerator.replace(/,/g, '');
-                            const cleanDenom = denominator.replace(/,/g, '');
                             stateDataByYear[year].age[ageGroup] = {
-                                rate: parseFloat(numericValue.replace('%', '')),
-                                count: parseInt(cleanNum) || 0,
-                                total: parseInt(cleanDenom) || 0
+                                rate: actualRate,
+                                count: numCount,
+                                total: numTotal
                             };
                         }
                     }
@@ -722,12 +738,6 @@
                     // The data has race in both "Dimension List" and "Race Ethnicity" columns
                     // We want rows where the dimension list is the race name (without "Total")
                     if (raceEthnicity && raceEthnicity !== '' && !age) {
-                        const cleanNum = numerator.replace(/,/g, '');
-                        const cleanDenom = denominator.replace(/,/g, '');
-                        const rateValue = parseFloat(numericValue.replace('%', ''));
-                        const countValue = parseInt(cleanNum) || 0;
-                        const totalValue = parseInt(cleanDenom) || 0;
-                        
                         // Clean up the race name
                         let raceName = raceEthnicity.replace(' (Of mother)', '').trim();
                         
@@ -749,9 +759,9 @@
                         if (mainCategories.includes(raceName)) {
                             if (!stateDataByYear[year].race[raceName]) {
                                 stateDataByYear[year].race[raceName] = {
-                                    rate: rateValue,
-                                    count: countValue,
-                                    total: totalValue
+                                    rate: actualRate,
+                                    count: numCount,
+                                    total: numTotal
                                 };
                             }
                         }
