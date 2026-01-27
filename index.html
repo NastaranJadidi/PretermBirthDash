@@ -661,6 +661,7 @@
                 
                 const year = timeframe;
                 
+                // Process county data
                 if (localeLevel === 'County' && dimensionList === 'Total') {
                     const position = COUNTY_POSITIONS[locale];
                     if (!position) return;
@@ -685,13 +686,27 @@
                     allCountyData[position.name][year] = dataPoint;
                 }
                 
+                // Process state data
                 if (localeLevel === 'State' && locale === 'Utah') {
                     if (!stateDataByYear[year]) {
                         stateDataByYear[year] = { age: {}, race: {} };
                     }
                     
+                    // Process age data - FIXED: Look for simple age dimension without race
                     if (age && age !== '' && !raceEthnicity) {
-                        const ageGroup = age.replace('Aged ', '').replace(' years', '').replace(' (Of mother)', '').trim();
+                        // Clean the age string
+                        let ageGroup = age.replace('Aged ', '').replace(' years', '').replace(' (Of mother)', '').trim();
+                        
+                        // Map "40 years and over" to "40 and over"
+                        if (ageGroup === '40 and over') {
+                            ageGroup = '40 and over';
+                        }
+                        
+                        // Map "<18" to keep it consistent
+                        if (ageGroup === '<18') {
+                            ageGroup = '<18';
+                        }
+                        
                         if (!stateDataByYear[year].age[ageGroup]) {
                             const cleanNum = numerator.replace(/,/g, '');
                             const cleanDenom = denominator.replace(/,/g, '');
@@ -703,7 +718,9 @@
                         }
                     }
                     
-                    // Process race/ethnicity data - check if this row has race data without age breakdown
+                    // Process race/ethnicity data - FIXED: Check dimension list column
+                    // The data has race in both "Dimension List" and "Race Ethnicity" columns
+                    // We want rows where the dimension list is the race name (without "Total")
                     if (raceEthnicity && raceEthnicity !== '' && !age) {
                         const cleanNum = numerator.replace(/,/g, '');
                         const cleanDenom = denominator.replace(/,/g, '');
@@ -711,24 +728,32 @@
                         const countValue = parseInt(cleanNum) || 0;
                         const totalValue = parseInt(cleanDenom) || 0;
                         
-                        // Keep all race categories separate - do NOT combine
-                        let raceName = raceEthnicity;
-                        
                         // Clean up the race name
-                        raceName = raceName.replace(' (Of mother)', '').trim();
+                        let raceName = raceEthnicity.replace(' (Of mother)', '').trim();
                         
-                        // Skip "non-Hispanic" variants as they're subcategories
-                        if (raceName.includes('non-Hispanic')) {
-                            return;
-                        }
+                        // Only store main categories, not sub-categories
+                        // Main categories: White, Black or African American, American Indian or Alaska Native, 
+                        // Asian or Pacific Islander, Hispanic or Latino, Mexican
+                        const mainCategories = [
+                            'White',
+                            'Black or African American',
+                            'American Indian or Alaska Native',
+                            'Asian or Pacific Islander',
+                            'Hispanic or Latino',
+                            'Mexican',
+                            'Not Hispanic or Latino',
+                            'White, non-Hispanic',
+                            'Black or African American, non-Hispanic'
+                        ];
                         
-                        // Store each race separately
-                        if (!stateDataByYear[year].race[raceName]) {
-                            stateDataByYear[year].race[raceName] = {
-                                rate: rateValue,
-                                count: countValue,
-                                total: totalValue
-                            };
+                        if (mainCategories.includes(raceName)) {
+                            if (!stateDataByYear[year].race[raceName]) {
+                                stateDataByYear[year].race[raceName] = {
+                                    rate: rateValue,
+                                    count: countValue,
+                                    total: totalValue
+                                };
+                            }
                         }
                     }
                 }
@@ -737,16 +762,6 @@
             return { countyData, stateDataByYear, allCountyData };
         }
 
-        // Debug: Log what race data we collected
-        function debugRaceData() {
-            console.log('=== RACE DATA COLLECTED ===');
-            const years = ['2008', '2009', '2010', '2011', '2012'];
-            years.forEach(year => {
-                console.log(`Year ${year}:`, stateData[year]?.race);
-            });
-        }
-
-        // [Original rendering functions remain the same]
         function renderMap(year) {
             const yearData = allData[year];
             if (!yearData || Object.keys(yearData).length === 0) {
@@ -1054,254 +1069,6 @@
             });
         }
 
-        // NEW: County comparison functions
-        function renderCountyTrends() {
-            const years = ['2008', '2009', '2010', '2011', '2012'];
-            const counties = Object.keys(countyDataAllYears);
-            
-            if (counties.length === 0) {
-                document.getElementById('county-trends-chart').innerHTML = '<div class="error">No county data available</div>';
-                return;
-            }
-
-            const padding = { top: 30, right: 120, bottom: 40, left: 60 };
-            const width = 600;
-            const height = 350;
-            
-            // Get rate ranges for scaling
-            let allRates = [];
-            counties.forEach(county => {
-                years.forEach(year => {
-                    if (countyDataAllYears[county][year]) {
-                        allRates.push(countyDataAllYears[county][year].rate);
-                    }
-                });
-            });
-            
-            const maxRate = Math.max(...allRates);
-            const minRate = Math.min(...allRates);
-            
-            const colors = ['#ff7e7e', '#ff9a8b', '#ffb8aa', '#4ade80', '#fbbf24', '#fb923c', '#a78bfa', '#c084fc', '#f87171', '#e86a5d', '#d64933'];
-            
-            let svgHTML = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
-            
-            // Y-axis
-            svgHTML += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="#ffb8aa" stroke-width="2"/>`;
-            
-            // X-axis  
-            svgHTML += `<line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="#ffb8aa" stroke-width="2"/>`;
-            
-            // Y-axis labels
-            for (let i = 0; i <= 4; i++) {
-                const value = minRate + (maxRate - minRate) * (i / 4);
-                const y = height - padding.bottom - ((value - minRate) / (maxRate - minRate)) * (height - padding.top - padding.bottom);
-                svgHTML += `<text x="${padding.left - 10}" y="${y + 5}" text-anchor="end" class="axis-label">${value.toFixed(1)}%</text>`;
-                svgHTML += `<line x1="${padding.left}" y1="${y}" x2="${width - padding.right}" y2="${y}" stroke="#ffd4c4" stroke-width="1" opacity="0.5"/>`;
-            }
-            
-            // X-axis labels
-            years.forEach((year, i) => {
-                const x = padding.left + (i / (years.length - 1)) * (width - padding.left - padding.right);
-                svgHTML += `<text x="${x}" y="${height - padding.bottom + 20}" text-anchor="middle" class="axis-label">${year}</text>`;
-            });
-            
-            // Draw lines for each county
-            counties.forEach((county, idx) => {
-                const color = colors[idx % colors.length];
-                let points = [];
-                
-                years.forEach((year, i) => {
-                    if (countyDataAllYears[county][year]) {
-                        const rate = countyDataAllYears[county][year].rate;
-                        const x = padding.left + (i / (years.length - 1)) * (width - padding.left - padding.right);
-                        const y = height - padding.bottom - ((rate - minRate) / (maxRate - minRate)) * (height - padding.top - padding.bottom);
-                        points.push(`${x},${y}`);
-                    }
-                });
-                
-                if (points.length > 0) {
-                    svgHTML += `<polyline points="${points.join(' ')}" fill="none" stroke="${color}" stroke-width="2.5" class="line-point"/>`;
-                    
-                    // Add legend
-                    const legendY = padding.top + idx * 20;
-                    svgHTML += `<line x1="${width - padding.right + 10}" y1="${legendY}" x2="${width - padding.right + 30}" y2="${legendY}" stroke="${color}" stroke-width="2.5"/>`;
-                    svgHTML += `<text x="${width - padding.right + 35}" y="${legendY + 5}" class="axis-label" font-size="10">${county}</text>`;
-                }
-            });
-            
-            svgHTML += '</svg>';
-            document.getElementById('county-trends-chart').innerHTML = svgHTML;
-        }
-
-        function renderCountyRanking() {
-            const year = '2012';
-            const yearData = allData[year];
-            
-            if (!yearData) {
-                document.getElementById('county-ranking-chart').innerHTML = '<div class="error">No data for 2012</div>';
-                return;
-            }
-            
-            const counties = Object.values(yearData).map(d => ({
-                name: d.name,
-                rate: d.rate,
-                count: d.count
-            })).sort((a, b) => b.rate - a.rate);
-            
-            const barHeight = 30;
-            const padding = { top: 10, right: 60, bottom: 30, left: 100 };
-            const chartHeight = counties.length * barHeight + padding.top + padding.bottom;
-            const chartWidth = 600;
-            const maxRate = Math.max(...counties.map(c => c.rate));
-            
-            let svgHTML = `<svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">`;
-            
-            counties.forEach((county, i) => {
-                const barWidth = (county.rate / maxRate) * (chartWidth - padding.left - padding.right);
-                const y = padding.top + i * barHeight;
-                const color = getColorForRate(county.rate);
-                
-                svgHTML += `
-                    <g class="bar" data-county="${county.name}" data-rate="${county.rate}" data-count="${county.count}">
-                        <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${i + 1}. ${county.name}</text>
-                        <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 5}" 
-                              fill="${color}" rx="4"/>
-                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#d64933" font-weight="600">${county.rate.toFixed(1)}%</text>
-                    </g>
-                `;
-            });
-            
-            svgHTML += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${chartHeight - padding.bottom}" class="axis-line"/></svg>`;
-            document.getElementById('county-ranking-chart').innerHTML = svgHTML;
-            
-            // Add event listeners
-            document.querySelectorAll('#county-ranking-chart .bar').forEach(bar => {
-                bar.addEventListener('mouseenter', function(e) {
-                    const name = this.dataset.county;
-                    const rate = this.dataset.rate;
-                    const count = this.dataset.count;
-                    showTooltip(`<div class="tooltip-title">${name} County</div><div class="tooltip-value">Rate: ${parseFloat(rate).toFixed(1)}%<br>Cases: ${count}</div>`, e);
-                });
-                bar.addEventListener('mouseleave', hideTooltip);
-            });
-        }
-
-        function renderCountyClustering() {
-            const year = '2012';
-            const yearData = allData[year];
-            
-            if (!yearData) {
-                document.getElementById('county-clustering-chart').innerHTML = '<div class="error">No data</div>';
-                return;
-            }
-            
-            const counties = Object.values(yearData);
-            
-            // Cluster counties
-            const clusters = {
-                low: counties.filter(c => c.rate < 1.0),
-                moderate: counties.filter(c => c.rate >= 1.0 && c.rate < 1.3),
-                elevated: counties.filter(c => c.rate >= 1.3 && c.rate < 1.7),
-                high: counties.filter(c => c.rate >= 1.7)
-            };
-            
-            const width = 600;
-            const height = 350;
-            const padding = { top: 40, right: 40, bottom: 40, left: 40 };
-            
-            let svgHTML = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
-            
-            const clusterData = [
-                { label: 'Low (<1.0%)', count: clusters.low.length, color: '#4ade80', counties: clusters.low },
-                { label: 'Moderate (1.0-1.3%)', count: clusters.moderate.length, color: '#fbbf24', counties: clusters.moderate },
-                { label: 'Elevated (1.3-1.7%)', count: clusters.elevated.length, color: '#fb923c', counties: clusters.elevated },
-                { label: 'High (>1.7%)', count: clusters.high.length, color: '#f87171', counties: clusters.high }
-            ];
-            
-            const barWidth = 100;
-            const spacing = 30;
-            const maxCount = Math.max(...clusterData.map(d => d.count));
-            
-            clusterData.forEach((cluster, i) => {
-                const x = padding.left + i * (barWidth + spacing);
-                const barHeight = (cluster.count / maxCount) * (height - padding.top - padding.bottom);
-                const y = height - padding.bottom - barHeight;
-                
-                svgHTML += `
-                    <g>
-                        <rect x="${x}" y="${y}" width="${barWidth}" height="${barHeight}" 
-                              fill="${cluster.color}" rx="6" opacity="0.9"/>
-                        <text x="${x + barWidth/2}" y="${y - 10}" text-anchor="middle" class="axis-label" font-size="14" font-weight="600">${cluster.count}</text>
-                        <text x="${x + barWidth/2}" y="${height - padding.bottom + 20}" text-anchor="middle" class="axis-label" font-size="11" font-weight="600">${cluster.label.split('(')[0]}</text>
-                        <text x="${x + barWidth/2}" y="${height - padding.bottom + 35}" text-anchor="middle" class="axis-label" font-size="9">${cluster.label.split('(')[1]}</text>
-                    </g>
-                `;
-            });
-            
-            svgHTML += '</svg>';
-            document.getElementById('county-clustering-chart').innerHTML = svgHTML;
-        }
-
-        function renderPopulationWeighted() {
-            const year = '2012';
-            const yearData = allData[year];
-            
-            if (!yearData) {
-                document.getElementById('population-weighted-chart').innerHTML = '<div class="error">No data</div>';
-                return;
-            }
-            
-            const counties = Object.values(yearData);
-            const maxCount = Math.max(...counties.map(c => c.count));
-            const maxRate = Math.max(...counties.map(c => c.rate));
-            
-            const width = 600;
-            const height = 350;
-            const padding = { top: 30, right: 100, bottom: 50, left: 60 };
-            
-            let svgHTML = `<svg viewBox="0 0 ${width} ${height}" xmlns="http://www.w3.org/2000/svg">`;
-            
-            // Axes
-            svgHTML += `<line x1="${padding.left}" y1="${height - padding.bottom}" x2="${width - padding.right}" y2="${height - padding.bottom}" stroke="#ffb8aa" stroke-width="2"/>`;
-            svgHTML += `<line x1="${padding.left}" y1="${padding.top}" x2="${padding.left}" y2="${height - padding.bottom}" stroke="#ffb8aa" stroke-width="2"/>`;
-            
-            // X-axis label
-            svgHTML += `<text x="${(padding.left + width - padding.right) / 2}" y="${height - 10}" text-anchor="middle" class="axis-label" font-weight="600">Preterm Birth Rate (%)</text>`;
-            
-            // Y-axis label
-            svgHTML += `<text x="${20}" y="${(padding.top + height - padding.bottom) / 2}" text-anchor="middle" class="axis-label" font-weight="600" transform="rotate(-90, 20, ${(padding.top + height - padding.bottom) / 2})">Case Count</text>`;
-            
-            // Plot bubbles
-            counties.forEach(county => {
-                const x = padding.left + (county.rate / maxRate) * (width - padding.left - padding.right);
-                const y = height - padding.bottom - (county.count / maxCount) * (height - padding.top - padding.bottom);
-                const r = 5 + (county.totalBirths / Math.max(...counties.map(c => c.totalBirths))) * 15;
-                const color = getColorForRate(county.rate);
-                
-                svgHTML += `
-                    <g class="county-circle" data-county="${county.name}" data-rate="${county.rate}" data-count="${county.count}" data-births="${county.totalBirths}">
-                        <circle cx="${x}" cy="${y}" r="${r}" fill="${color}" opacity="0.7" stroke="#d64933" stroke-width="1.5"/>
-                        <text x="${x}" y="${y + 3}" text-anchor="middle" class="county-text" font-size="8">${county.name}</text>
-                    </g>
-                `;
-            });
-            
-            svgHTML += '</svg>';
-            document.getElementById('population-weighted-chart').innerHTML = svgHTML;
-            
-            // Add tooltips
-            document.querySelectorAll('#population-weighted-chart .county-circle').forEach(circle => {
-                circle.addEventListener('mouseenter', function(e) {
-                    const name = this.dataset.county;
-                    const rate = this.dataset.rate;
-                    const count = this.dataset.count;
-                    const births = parseInt(this.dataset.births).toLocaleString();
-                    showTooltip(`<div class="tooltip-title">${name} County</div><div class="tooltip-value">Rate: ${parseFloat(rate).toFixed(1)}%<br>Cases: ${count}<br>Total Births: ${births}</div>`, e);
-                });
-                circle.addEventListener('mouseleave', hideTooltip);
-            });
-        }
-
         function renderTeenBirths(year) {
             const ageData = stateData[year]?.age;
             if (!ageData) {
@@ -1506,9 +1273,6 @@
         function updateCountySpecific(county) {
             const insightsBox = document.getElementById('county-insights-box');
             
-            console.log('County selected:', county);
-            console.log('County data available:', countyDataAllYears[county]);
-            
             if (county === 'all') {
                 // Show empty state
                 insightsBox.style.display = 'none';
@@ -1558,13 +1322,12 @@
             }
             
             // Render county-specific charts
-            console.log('Rendering charts for:', county);
             renderCountyAgeAnalysis(county);
             renderCountyRaceAnalysis(county);
         }
         
         function renderCountyAgeAnalysis(county) {
-            // Note: We'll show the county's trend over years with a comparison to state average
+            // Show the county's trend over years with a comparison to state average
             const years = ['2008', '2009', '2010', '2011', '2012'];
             const countyRates = [];
             const stateRates = [];
@@ -1664,7 +1427,6 @@
         
         function renderCountyRaceAnalysis(county) {
             // Show a simple summary since county-level race data is typically not available
-            // But we can show the county's overall performance
             const years = ['2008', '2009', '2010', '2011', '2012'];
             
             const countyData = countyDataAllYears[county];
@@ -1749,8 +1511,11 @@
                 stateData = processed.stateDataByYear;
                 countyDataAllYears = processed.allCountyData;
                 
-                // Debug what we collected
-                debugRaceData();
+                // Debug output
+                console.log('Data processed successfully!');
+                console.log('Sample state data for 2012:');
+                console.log('Age groups:', Object.keys(stateData['2012']?.age || {}));
+                console.log('Race groups:', Object.keys(stateData['2012']?.race || {}));
                 
                 const yearSelect = document.getElementById('year-select');
                 const countySelect = document.getElementById('county-select');
