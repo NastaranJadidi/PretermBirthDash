@@ -415,46 +415,18 @@
                     </div>
                 </div>
 
-                <!-- Age-Focused Analysis Section - MOVED UP -->
+                <!-- County-Specific Analysis Section -->
                 <div class="section-wrapper">
-                    <div class="full-width-section">
-                        <h2 class="section-title">Age-Focused Analysis</h2>
-                        <p class="section-subtitle">Deep dive into maternal age patterns and risk factors</p>
-                        
-                        <div class="chart-grid">
-                            <div class="chart-container">
-                                <h3 class="chart-title">Teen Births Analysis (&lt;18 Years)</h3>
-                                <p class="chart-description">Teen mothers vs. adult mothers comparison</p>
-                                <div id="teen-births-chart" style="min-height: 350px;"></div>
-                            </div>
-
-                            <div class="chart-container">
-                                <h3 class="chart-title">Advanced Maternal Age (35+)</h3>
-                                <p class="chart-description">Risk increases with maternal age</p>
-                                <div id="advanced-age-chart" style="min-height: 350px;"></div>
-                            </div>
-
-                            <div class="chart-container" style="grid-column: 1 / -1;">
-                                <h3 class="chart-title">Age Group Comparison Bubble Chart</h3>
-                                <p class="chart-description">Bubble size = total births, position shows rate and count</p>
-                                <div id="age-bubble-chart" style="min-height: 400px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- County Comparison Section -->
-                <div class="section-wrapper">
-                    <div class="full-width-section">
+                    <div class="county-specific">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                             <div>
-                                <h2 class="section-title" style="margin-bottom: 0.5rem;">County Analysis & Comparison</h2>
-                                <p class="section-subtitle" style="margin-bottom: 0;">Explore geographic patterns and trends across Utah counties</p>
+                                <h2 class="section-title" style="margin-bottom: 0.5rem;">County-Specific Deep Dive</h2>
+                                <p class="section-subtitle" style="margin-bottom: 0;">Select a county to view detailed age and ethnicity breakdown</p>
                             </div>
                             <div class="county-control">
-                                <label for="county-select">Deep Dive:</label>
+                                <label for="county-select">Select County:</label>
                                 <select id="county-select">
-                                    <option value="all" selected>Select County</option>
+                                    <option value="all" selected>Choose County</option>
                                     <option value="Salt Lake">Salt Lake</option>
                                     <option value="Utah">Utah</option>
                                     <option value="Davis">Davis</option>
@@ -470,58 +442,32 @@
                             </div>
                         </div>
                         
-                        <div class="chart-grid">
-                            <div class="chart-container">
-                                <h3 class="chart-title">County Trends Over Time</h3>
-                                <p class="chart-description">Line chart showing each county's 5-year trend (2008-2012)</p>
-                                <div id="county-trends-chart" style="min-height: 350px;"></div>
-                            </div>
-
-                            <div class="chart-container">
-                                <h3 class="chart-title">County Ranking (2012)</h3>
-                                <p class="chart-description">Counties ranked by preterm birth rate</p>
-                                <div id="county-ranking-chart" style="min-height: 350px;"></div>
-                            </div>
-
-                            <div class="chart-container">
-                                <h3 class="chart-title">County Clustering</h3>
-                                <p class="chart-description">Counties grouped by rate ranges and geographic patterns</p>
-                                <div id="county-clustering-chart" style="min-height: 350px;"></div>
-                            </div>
-
-                            <div class="chart-container">
-                                <h3 class="chart-title">Population-Weighted Impact</h3>
-                                <p class="chart-description">Case count vs. rate - identifying where resources are needed</p>
-                                <div id="population-weighted-chart" style="min-height: 350px;"></div>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- County-Specific Analysis Section -->
-                <div class="section-wrapper">
-                    <div id="county-detail-content" style="display: none;">
-                        <div class="county-specific">
-                            <h2 class="section-title">County-Specific Analysis: <span id="selected-county-name">County</span></h2>
-                            <p class="section-subtitle">Detailed breakdown for selected county</p>
-                            
+                        <div id="county-detail-content" style="display: none;">
                             <div class="insight-box" id="county-insights">
-                                <h4>Key Insights</h4>
+                                <h4>Key Insights for <span id="selected-county-name">County</span></h4>
                                 <p id="insight-text">Loading insights...</p>
                             </div>
 
                             <div class="chart-grid">
                                 <div class="chart-container">
-                                    <h3 class="chart-title">County × Age Analysis</h3>
-                                    <p class="chart-description">Age group breakdown for this county</p>
+                                    <h3 class="chart-title">Trend Over Time</h3>
+                                    <p class="chart-description">County rate vs. state average (2008-2012)</p>
                                     <div id="county-age-chart" style="min-height: 350px;"></div>
                                 </div>
 
                                 <div class="chart-container">
-                                    <h3 class="chart-title">County × Race Analysis</h3>
-                                    <p class="chart-description">Racial/ethnic breakdown for this county</p>
+                                    <h3 class="chart-title">Cases by Year</h3>
+                                    <p class="chart-description">Annual case count and rate</p>
                                     <div id="county-race-chart" style="min-height: 350px;"></div>
                                 </div>
+                            </div>
+
+                            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 212, 196, 0.2); border-radius: 12px; border: 1px solid #ffb8aa;">
+                                <p style="color: #7a4a47; font-size: 0.9rem; text-align: center;">
+                                    <strong>Note:</strong> Ethnicity-specific data at the county level is not available in this dataset. 
+                                    The data contains only total counts per county per year. For ethnicity breakdowns, please refer to the 
+                                    state-level Race/Ethnicity charts above.
+                                </p>
                             </div>
                         </div>
                     </div>
@@ -1686,12 +1632,6 @@
                 updateDashboard(yearSelect.value);
                 renderAgeHeatmap();
                 renderRaceHeatmap();
-                
-                // Render county analysis charts (static)
-                renderCountyTrends();
-                renderCountyRanking();
-                renderCountyClustering();
-                renderPopulationWeighted();
                 
                 yearSelect.addEventListener('change', (e) => {
                     updateDashboard(e.target.value);
