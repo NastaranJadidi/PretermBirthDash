@@ -35,8 +35,8 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
-            color: white;
-            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.15);
+            color: #0f172a;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
         .title-section p { color: rgba(255, 255, 255, 0.95); font-size: 0.9rem; }
@@ -89,7 +89,7 @@
         }
         
         .county-control label { 
-            color: #d64933; 
+            color: #0f172a; 
             font-size: 0.95rem; 
             font-weight: 600; 
         }
@@ -150,7 +150,7 @@
             min-height: 100%;
         }
 
-        .map-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: #d64933; }
+        .map-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: #0f172a; }
 
         .map-container {
             flex: 1;
@@ -172,10 +172,10 @@
             border: 1px solid #ffb8aa;
         }
 
-        .legend-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: #d64933; }
+        .legend-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: #0f172a; }
         .legend-items { display: flex; flex-direction: column; gap: 0.5rem; }
-        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #7a4a47; }
-        .legend-color { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #d64933; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #1f2937; }
+        .legend-color { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #0f172a; }
 
         .viz-section {
             display: grid;
@@ -194,8 +194,8 @@
         }
 
         .viz-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #ffd4c4; }
-        .viz-header h3 { font-size: 1rem; font-weight: 600; color: #d64933; margin-bottom: 0.25rem; }
-        .viz-header p { font-size: 0.8rem; color: #ff7e7e; }
+        .viz-header h3 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
+        .viz-header p { font-size: 0.8rem; color: #6b7280; }
         .viz-content { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 200px; }
 
         /* New Sections */
@@ -208,7 +208,7 @@
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #d64933;
+            color: #0f172a;
             margin-bottom: 0.5rem;
             padding-bottom: 0.5rem;
             border-bottom: 3px solid #ffd4c4;
@@ -216,7 +216,7 @@
 
         .section-subtitle {
             font-size: 0.9rem;
-            color: #ff7e7e;
+            color: #6b7280;
             margin-bottom: 2rem;
         }
 
@@ -238,13 +238,13 @@
         .chart-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #d64933;
+            color: #0f172a;
             margin-bottom: 0.5rem;
         }
 
         .chart-description {
             font-size: 0.85rem;
-            color: #7a4a47;
+            color: #1f2937;
             margin-bottom: 1rem;
         }
 
@@ -261,9 +261,9 @@
         .bar:hover rect, .heatmap-cell:hover rect { opacity: 0.8; }
         
         .county-text, .heatmap-text { pointer-events: none; fill: #2d1a18; font-weight: 600; }
-        .axis-label { fill: #7a4a47; font-size: 11px; }
+        .axis-label { fill: #4b5563; font-size: 11px; }
         .axis-line { stroke: #ffb8aa; stroke-width: 2; }
-        .heatmap-label { fill: #7a4a47; font-size: 11px; }
+        .heatmap-label { fill: #4b5563; font-size: 11px; }
 
         .loading { text-align: center; color: #ff7e7e; padding: 2rem; }
         .error { text-align: center; color: #dc2626; padding: 1rem; background: rgba(220, 38, 38, 0.1); border-radius: 8px; font-size: 0.9rem; border: 1px solid #fca5a5; }
@@ -290,21 +290,44 @@
 
         .insight-box {
             background: rgba(255, 212, 196, 0.3);
-            border-left: 4px solid #ff7e7e;
+            border-left: 4px solid #0f172a;
             padding: 1rem;
             margin: 1rem 0;
             border-radius: 4px;
         }
 
         .insight-box h4 {
-            color: #d64933;
+            color: #0f172a;
             font-size: 0.95rem;
             margin-bottom: 0.5rem;
         }
 
         .insight-box p {
-            color: #7a4a47;
+            color: #1f2937;
             font-size: 0.85rem;
+        }
+        
+        .empty-state {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 350px;
+            color: #9ca3af;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .empty-state-icon {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+            opacity: 0.3;
+        }
+        
+        .empty-state-text {
+            font-size: 1rem;
+            font-weight: 500;
+            color: #6b7280;
         }
     </style>
 </head>
@@ -448,50 +471,52 @@
                     <div class="county-specific">
                         <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
                             <div>
-                                <h2 class="section-title" style="margin-bottom: 0.5rem;">County-Specific Deep Dive</h2>
-                                <p class="section-subtitle" style="margin-bottom: 0;">Select a county to view detailed age and ethnicity breakdown</p>
+                                <h2 class="section-title" style="margin-bottom: 0.5rem;">County-Specific Analysis</h2>
+                                <p class="section-subtitle" style="margin-bottom: 0;">Select a county from the dropdown to view detailed analysis</p>
                             </div>
                             <div class="county-control">
                                 <label for="county-select">Select County:</label>
                                 <select id="county-select">
-                                    <option value="all" selected>Choose County</option>
-                                    <option value="Salt Lake">Salt Lake</option>
-                                    <option value="Utah">Utah</option>
-                                    <option value="Davis">Davis</option>
-                                    <option value="Weber">Weber</option>
-                                    <option value="Washington">Washington</option>
-                                    <option value="Cache">Cache</option>
-                                    <option value="Box Elder">Box Elder</option>
-                                    <option value="Tooele">Tooele</option>
-                                    <option value="Iron">Iron</option>
-                                    <option value="Sevier">Sevier</option>
-                                    <option value="Uintah">Uintah</option>
+                                    <option value="all" selected>-- Select County --</option>
+                                    <!-- Counties will be dynamically populated -->
                                 </select>
                             </div>
                         </div>
                         
-                        <div id="county-detail-content" style="display: none;">
-                            <div class="insight-box" id="county-insights">
-                                <h4>Key Insights for <span id="selected-county-name">County</span></h4>
-                                <p id="insight-text">Loading insights...</p>
-                            </div>
-
+                        <div id="county-detail-content">
                             <div class="chart-grid">
                                 <div class="chart-container">
                                     <h3 class="chart-title">Trend Over Time</h3>
                                     <p class="chart-description">County rate vs. state average (2008-2012)</p>
-                                    <div id="county-age-chart" style="min-height: 350px;"></div>
+                                    <div id="county-age-chart" style="min-height: 350px;">
+                                        <div class="empty-state">
+                                            <div class="empty-state-icon">📊</div>
+                                            <div class="empty-state-text">Select a county to view trend analysis</div>
+                                        </div>
+                                    </div>
                                 </div>
 
                                 <div class="chart-container">
                                     <h3 class="chart-title">Cases by Year</h3>
                                     <p class="chart-description">Annual case count and rate</p>
-                                    <div id="county-race-chart" style="min-height: 350px;"></div>
+                                    <div id="county-race-chart" style="min-height: 350px;">
+                                        <div class="empty-state">
+                                            <div class="empty-state-icon">📈</div>
+                                            <div class="empty-state-text">Select a county to view case analysis</div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div id="county-insights-box" style="display: none;">
+                                <div class="insight-box" id="county-insights">
+                                    <h4>Key Insights for <span id="selected-county-name">County</span></h4>
+                                    <p id="insight-text">Loading insights...</p>
                                 </div>
                             </div>
 
                             <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 212, 196, 0.2); border-radius: 12px; border: 1px solid #ffb8aa;">
-                                <p style="color: #7a4a47; font-size: 0.9rem; text-align: center;">
+                                <p style="color: #1f2937; font-size: 0.9rem; text-align: center;">
                                     <strong>Note:</strong> Ethnicity-specific data at the county level is not available in this dataset. 
                                     The data contains only total counts per county per year. For ethnicity breakdowns, please refer to the 
                                     state-level Race/Ethnicity charts above.
@@ -679,14 +704,32 @@
                     }
                     
                     if (raceEthnicity && raceEthnicity !== '' && dimensionList.includes(raceEthnicity)) {
-                        if (!stateDataByYear[year].race[raceEthnicity]) {
-                            const cleanNum = numerator.replace(/,/g, '');
-                            const cleanDenom = denominator.replace(/,/g, '');
-                            stateDataByYear[year].race[raceEthnicity] = {
-                                rate: parseFloat(numericValue.replace('%', '')),
-                                count: parseInt(cleanNum) || 0,
-                                total: parseInt(cleanDenom) || 0
+                        const cleanNum = numerator.replace(/,/g, '');
+                        const cleanDenom = denominator.replace(/,/g, '');
+                        const rateValue = parseFloat(numericValue.replace('%', ''));
+                        const countValue = parseInt(cleanNum) || 0;
+                        const totalValue = parseInt(cleanDenom) || 0;
+                        
+                        // Consolidate Mexican and other Hispanic subgroups into "Hispanic or Latino"
+                        let raceName = raceEthnicity;
+                        if (raceEthnicity === 'Mexican' || raceEthnicity === 'Puerto Rican' || 
+                            raceEthnicity === 'Central or South American' || raceEthnicity === 'Hispanic or Latino') {
+                            raceName = 'Hispanic or Latino';
+                        }
+                        
+                        if (!stateDataByYear[year].race[raceName]) {
+                            stateDataByYear[year].race[raceName] = {
+                                rate: rateValue,
+                                count: countValue,
+                                total: totalValue
                             };
+                        } else {
+                            // Aggregate if we're combining multiple categories (like Mexican into Latino)
+                            const existing = stateDataByYear[year].race[raceName];
+                            existing.count += countValue;
+                            existing.total += totalValue;
+                            // Recalculate rate based on aggregated values
+                            existing.rate = (existing.count / existing.total) * 100;
                         }
                     }
                 }
@@ -811,32 +854,43 @@
                 return;
             }
 
-            const chartData = Object.entries(data).map(([race, values]) => ({ race, ...values })).sort((a, b) => b.rate - a.rate);
+            // Define consistent race/ethnicity categories to always show
+            const raceCategories = [
+                'White',
+                'Hispanic or Latino',
+                'Asian or Pacific Islander',
+                'Black or African American',
+                'American Indian or Alaska Native'
+            ];
 
-            if (chartData.length === 0) {
-                document.getElementById('race-chart').innerHTML = '<div class="error">No data</div>';
-                return;
-            }
+            // Build chart data ensuring all categories are present
+            const chartData = raceCategories.map(race => {
+                if (data[race]) {
+                    return { race, ...data[race] };
+                } else {
+                    return { race, rate: 0, count: 0, total: 0 };
+                }
+            }).sort((a, b) => b.rate - a.rate);
 
-            const maxRate = Math.max(...chartData.map(d => d.rate));
+            const maxRate = Math.max(...chartData.map(d => d.rate), 1); // At least 1% for scale
             const barHeight = 35;
-            const padding = { top: 10, right: 60, bottom: 25, left: 180 };
+            const padding = { top: 10, right: 60, bottom: 25, left: 200 };
             const chartHeight = chartData.length * barHeight + padding.top + padding.bottom;
             const chartWidth = 500;
 
             let svgHTML = `<svg viewBox="0 0 ${chartWidth} ${chartHeight}" xmlns="http://www.w3.org/2000/svg">`;
             
             chartData.forEach((d, i) => {
-                const barWidth = (d.rate / maxRate) * (chartWidth - padding.left - padding.right);
+                const barWidth = d.rate > 0 ? (d.rate / maxRate) * (chartWidth - padding.left - padding.right) : 0;
                 const y = padding.top + i * barHeight;
-                const displayName = d.race.length > 20 ? d.race.substring(0, 17) + '...' : d.race;
+                const displayName = d.race.length > 25 ? d.race.substring(0, 22) + '...' : d.race;
                 
                 svgHTML += `
                     <g class="bar" data-race="${d.race}" data-rate="${d.rate}" data-count="${d.count}">
                         <text x="${padding.left - 10}" y="${y + 18}" text-anchor="end" class="axis-label">${displayName}</text>
                         <rect x="${padding.left}" y="${y}" width="${barWidth}" height="${barHeight - 10}" 
                               fill="${getColorForRate(d.rate)}" rx="4"/>
-                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#d64933" font-weight="600">${d.rate.toFixed(1)}%</text>
+                        <text x="${padding.left + barWidth + 5}" y="${y + 18}" class="axis-label" fill="#1e3a8a" font-weight="600">${d.rate.toFixed(1)}%</text>
                     </g>
                 `;
             });
@@ -925,17 +979,17 @@
 
         function renderRaceHeatmap() {
             const years = ['2008', '2009', '2010', '2011', '2012'];
-            const races = ['White', 'Hispanic or Latino', 'Asian or Pacific Islander', 'Black or African American'];
+            const races = ['White', 'Hispanic or Latino', 'Asian or Pacific Islander', 'Black or African American', 'American Indian or Alaska Native'];
             
             const heatmapData = years.map(year => {
                 const yearData = stateData[year]?.race || {};
                 return races.map(race => yearData[race]?.count || 0);
             });
 
-            const maxValue = Math.max(...heatmapData.flat());
+            const maxValue = Math.max(...heatmapData.flat(), 1);
             const cellWidth = 60;
             const cellHeight = 40;
-            const padding = { top: 30, right: 10, bottom: 10, left: 140 };
+            const padding = { top: 30, right: 10, bottom: 10, left: 160 };
             
             let svgHTML = `<svg viewBox="0 0 ${cellWidth * years.length + padding.left + padding.right} ${cellHeight * races.length + padding.top + padding.bottom}" 
                      xmlns="http://www.w3.org/2000/svg">`;
@@ -946,14 +1000,14 @@
             });
             
             races.forEach((race, j) => {
-                const displayName = race.length > 18 ? race.substring(0, 15) + '...' : race;
+                const displayName = race.length > 22 ? race.substring(0, 19) + '...' : race;
                 svgHTML += `<text x="${padding.left - 10}" y="${padding.top + j * cellHeight + cellHeight/2 + 5}" 
                           text-anchor="end" class="heatmap-label">${displayName}</text>`;
             });
             
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
-                    const intensity = value / maxValue;
+                    const intensity = maxValue > 0 ? (value / maxValue) : 0;
                     const color = `rgba(255, 154, 139, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
@@ -1437,17 +1491,30 @@
         }
 
         function updateCountySpecific(county) {
-            const detailContent = document.getElementById('county-detail-content');
+            const insightsBox = document.getElementById('county-insights-box');
             
             console.log('County selected:', county);
             console.log('County data available:', countyDataAllYears[county]);
             
             if (county === 'all') {
-                detailContent.style.display = 'none';
+                // Show empty state
+                insightsBox.style.display = 'none';
+                document.getElementById('county-age-chart').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📊</div>
+                        <div class="empty-state-text">Select a county to view trend analysis</div>
+                    </div>
+                `;
+                document.getElementById('county-race-chart').innerHTML = `
+                    <div class="empty-state">
+                        <div class="empty-state-icon">📈</div>
+                        <div class="empty-state-text">Select a county to view case analysis</div>
+                    </div>
+                `;
                 return;
             }
             
-            detailContent.style.display = 'block';
+            insightsBox.style.display = 'block';
             document.getElementById('selected-county-name').textContent = county;
             
             // Generate insights
@@ -1671,6 +1738,15 @@
                 
                 const yearSelect = document.getElementById('year-select');
                 const countySelect = document.getElementById('county-select');
+                
+                // Populate county dropdown with only counties that have data
+                const availableCounties = Object.keys(countyDataAllYears).sort();
+                availableCounties.forEach(county => {
+                    const option = document.createElement('option');
+                    option.value = county;
+                    option.textContent = county;
+                    countySelect.appendChild(option);
+                });
                 
                 updateDashboard(yearSelect.value);
                 renderAgeHeatmap();
