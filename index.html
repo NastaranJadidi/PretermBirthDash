@@ -11,7 +11,7 @@
 
         body {
             font-family: 'Inter', sans-serif;
-            background: linear-gradient(135deg, #ffd4c4 0%, #ffc4b8 50%, #ffb8aa 100%);
+            background: #FFE4E1;
             color: #4a2c2a;
         }
 
@@ -419,8 +419,17 @@
 
                     <div class="viz-panel">
                         <div class="viz-header">
-                            <h3>Age Group Trends</h3>
-                            <p>Cases by year and age</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3>Age Group Trends</h3>
+                                    <p>Cases by year and age</p>
+                                </div>
+                                <select id="age-heatmap-mode" style="padding: 0.5rem; border: 2px solid #ffb8aa; border-radius: 6px; background: white; color: #d64933; font-weight: 600; cursor: pointer;">
+                                    <option value="count">Cases</option>
+                                    <option value="rate">Rate (%)</option>
+                                    <option value="total">Total Births</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="viz-content" id="age-heatmap">
                             <div class="loading">Loading...</div>
@@ -429,8 +438,17 @@
 
                     <div class="viz-panel">
                         <div class="viz-header">
-                            <h3>Race/Ethnicity Trends</h3>
-                            <p>Cases by year and demographic</p>
+                            <div style="display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <h3>Race/Ethnicity Trends</h3>
+                                    <p>Cases by year and demographic</p>
+                                </div>
+                                <select id="race-heatmap-mode" style="padding: 0.5rem; border: 2px solid #ffb8aa; border-radius: 6px; background: white; color: #d64933; font-weight: 600; cursor: pointer;">
+                                    <option value="count">Cases</option>
+                                    <option value="rate">Rate (%)</option>
+                                    <option value="total">Total Births</option>
+                                </select>
+                            </div>
                         </div>
                         <div class="viz-content" id="race-heatmap">
                             <div class="loading">Loading...</div>
@@ -716,19 +734,13 @@
                         let ageGroup = age.replace('Aged ', '').replace(' years', '').replace(' (Of mother)', '').trim();
                         
                         // Map the age groups to standardized names
-                        // The data has these exact age groups that we want to keep:
-                        // - "<18" (maps from "Aged <18 years")
-                        // - "15-19" (maps from "Aged 15-19 years")
-                        // - "20-24" (maps from "Aged 20-24 years")
-                        // - "25-29" (maps from "Aged 25-29 years")
-                        // - "30-34" (maps from "Aged 30-34 years")
-                        // - "35 and over" (maps from "Aged 35 years and over")
-                        // - "35-39" (maps from "Aged 35-39 years")
-                        // - "40 and over" (maps from "Aged 40 years and over")
-                        
+                        // Skip "35 years and over" as it overlaps with 35-39 and 40+
                         if (ageGroup === '35 and over') {
-                            ageGroup = '35 and over';
-                        } else if (ageGroup === '40 and over') {
+                            return; // Skip this category
+                        }
+                        
+                        // Map other age groups
+                        if (ageGroup === '40 and over') {
                             ageGroup = '40 and over';
                         } else if (ageGroup === '<18') {
                             ageGroup = '<18';
@@ -956,12 +968,24 @@
 
         function renderAgeHeatmap() {
             const years = ['2008', '2009', '2010', '2011', '2012'];
-            // Use the age groups that actually exist in the data
-            const ageGroups = ['<18', '15-19', '20-24', '25-29', '30-34', '35 and over', '35-39', '40 and over'];
+            // Remove the overlapping "35 and over" category
+            const ageGroups = ['<18', '15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
+            
+            // Get the display mode from the dropdown
+            const displayMode = document.getElementById('age-heatmap-mode')?.value || 'count';
             
             const heatmapData = years.map(year => {
                 const yearData = stateData[year]?.age || {};
-                return ageGroups.map(ag => yearData[ag]?.count || 0);
+                return ageGroups.map(ag => {
+                    if (!yearData[ag]) return 0;
+                    if (displayMode === 'rate') {
+                        return yearData[ag].rate || 0;
+                    } else if (displayMode === 'total') {
+                        return yearData[ag].total || 0;
+                    } else {
+                        return yearData[ag].count || 0;
+                    }
+                });
             });
 
             const maxValue = Math.max(...heatmapData.flat(), 1);
@@ -989,12 +1013,19 @@
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
+                    // Get the actual data for tooltip
+                    const year = years[i];
+                    const ageGroup = ageGroups[j];
+                    const ageData = stateData[year]?.age?.[ageGroup];
+                    const displayValue = displayMode === 'rate' ? (value > 0 ? value.toFixed(1) + '%' : '0') : Math.round(value);
+                    
                     svgHTML += `
-                        <g class="heatmap-cell" data-year="${years[i]}" data-age="${ageGroups[j]}" data-count="${value}">
+                        <g class="heatmap-cell" data-year="${year}" data-age="${ageGroup}" 
+                            data-count="${ageData?.count || 0}" data-rate="${ageData?.rate || 0}" data-total="${ageData?.total || 0}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
                                   fill="${color}" stroke="#ffb8aa" stroke-width="1" rx="4"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
-                                  text-anchor="middle" class="heatmap-text" font-size="10">${value}</text>
+                                  text-anchor="middle" class="heatmap-text" font-size="10">${displayValue}</text>
                         </g>
                     `;
                 });
@@ -1008,7 +1039,9 @@
                     const year = this.dataset.year;
                     const age = this.dataset.age;
                     const count = this.dataset.count;
-                    showTooltip(`<div class="tooltip-title">${year} - ${age}</div><div class="tooltip-value">Cases: ${count}</div>`, e);
+                    const rate = parseFloat(this.dataset.rate);
+                    const total = parseInt(this.dataset.total).toLocaleString();
+                    showTooltip(`<div class="tooltip-title">${year} - Age ${age}</div><div class="tooltip-value">Cases: ${count}<br>Rate: ${rate.toFixed(1)}%<br>Total Births: ${total}</div>`, e);
                 });
                 cell.addEventListener('mouseleave', hideTooltip);
                 cell.addEventListener('mousemove', function(e) {
@@ -1035,9 +1068,21 @@
                 return;
             }
             
+            // Get the display mode from the dropdown
+            const displayMode = document.getElementById('race-heatmap-mode')?.value || 'count';
+            
             const heatmapData = years.map(year => {
                 const yearData = stateData[year]?.race || {};
-                return races.map(race => yearData[race]?.count || 0);
+                return races.map(race => {
+                    if (!yearData[race]) return 0;
+                    if (displayMode === 'rate') {
+                        return yearData[race].rate || 0;
+                    } else if (displayMode === 'total') {
+                        return yearData[race].total || 0;
+                    } else {
+                        return yearData[race].count || 0;
+                    }
+                });
             });
 
             const maxValue = Math.max(...heatmapData.flat(), 1);
@@ -1066,12 +1111,19 @@
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
+                    // Get the actual data for tooltip
+                    const year = years[i];
+                    const race = races[j];
+                    const raceData = stateData[year]?.race?.[race];
+                    const displayValue = displayMode === 'rate' ? (value > 0 ? value.toFixed(1) + '%' : '0') : Math.round(value);
+                    
                     svgHTML += `
-                        <g class="heatmap-cell" data-year="${years[i]}" data-race="${races[j]}" data-count="${value}">
+                        <g class="heatmap-cell" data-year="${year}" data-race="${race}" 
+                            data-count="${raceData?.count || 0}" data-rate="${raceData?.rate || 0}" data-total="${raceData?.total || 0}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
                                   fill="${color}" stroke="#e86a5d" stroke-width="1" rx="4"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
-                                  text-anchor="middle" class="heatmap-text" font-size="11">${value}</text>
+                                  text-anchor="middle" class="heatmap-text" font-size="11">${displayValue}</text>
                         </g>
                     `;
                 });
@@ -1085,7 +1137,9 @@
                     const year = this.dataset.year;
                     const race = this.dataset.race;
                     const count = this.dataset.count;
-                    showTooltip(`<div class="tooltip-title">${year} - ${race}</div><div class="tooltip-value">Cases: ${count}</div>`, e);
+                    const rate = parseFloat(this.dataset.rate);
+                    const total = parseInt(this.dataset.total).toLocaleString();
+                    showTooltip(`<div class="tooltip-title">${year} - ${race}</div><div class="tooltip-value">Cases: ${count}<br>Rate: ${rate.toFixed(1)}%<br>Total Births: ${total}</div>`, e);
                 });
                 cell.addEventListener('mouseleave', hideTooltip);
                 cell.addEventListener('mousemove', function(e) {
@@ -1572,6 +1626,22 @@
                 countySelect.addEventListener('change', (e) => {
                     updateCountySpecific(e.target.value);
                 });
+                
+                // Add event listeners for heatmap mode selectors
+                const ageHeatmapMode = document.getElementById('age-heatmap-mode');
+                const raceHeatmapMode = document.getElementById('race-heatmap-mode');
+                
+                if (ageHeatmapMode) {
+                    ageHeatmapMode.addEventListener('change', () => {
+                        renderAgeHeatmap();
+                    });
+                }
+                
+                if (raceHeatmapMode) {
+                    raceHeatmapMode.addEventListener('change', () => {
+                        renderRaceHeatmap();
+                    });
+                }
             }
         }
 
