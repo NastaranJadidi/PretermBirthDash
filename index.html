@@ -415,6 +415,34 @@
                     </div>
                 </div>
 
+                <!-- Age-Focused Analysis Section -->
+                <div class="section-wrapper">
+                    <div class="full-width-section">
+                        <h2 class="section-title">Age-Focused Analysis</h2>
+                        <p class="section-subtitle">Deep dive into maternal age patterns and risk factors</p>
+                        
+                        <div class="chart-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">Teen Births Analysis (&lt;18 Years)</h3>
+                                <p class="chart-description">Teen mothers vs. adult mothers comparison</p>
+                                <div id="teen-births-chart" style="min-height: 350px;"></div>
+                            </div>
+
+                            <div class="chart-container">
+                                <h3 class="chart-title">Advanced Maternal Age (35+)</h3>
+                                <p class="chart-description">Risk increases with maternal age</p>
+                                <div id="advanced-age-chart" style="min-height: 350px;"></div>
+                            </div>
+
+                            <div class="chart-container" style="grid-column: 1 / -1;">
+                                <h3 class="chart-title">Age Group Comparison Bubble Chart</h3>
+                                <p class="chart-description">Bubble size = total births, position shows rate and count</p>
+                                <div id="age-bubble-chart" style="min-height: 400px;"></div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
                 <!-- County-Specific Analysis Section -->
                 <div class="section-wrapper">
                     <div class="county-specific">
@@ -1411,6 +1439,9 @@
         function updateCountySpecific(county) {
             const detailContent = document.getElementById('county-detail-content');
             
+            console.log('County selected:', county);
+            console.log('County data available:', countyDataAllYears[county]);
+            
             if (county === 'all') {
                 detailContent.style.display = 'none';
                 return;
@@ -1424,18 +1455,30 @@
             if (countyData) {
                 const years = ['2008', '2009', '2010', '2011', '2012'];
                 const rates = years.map(y => countyData[y]?.rate || 0).filter(r => r > 0);
-                const avgRate = (rates.reduce((a, b) => a + b, 0) / rates.length).toFixed(2);
-                const trend = rates[rates.length - 1] > rates[0] ? 'increasing' : 'decreasing';
-                const change = ((rates[rates.length - 1] - rates[0]) / rates[0] * 100).toFixed(1);
                 
+                if (rates.length > 0) {
+                    const avgRate = (rates.reduce((a, b) => a + b, 0) / rates.length).toFixed(2);
+                    const trend = rates[rates.length - 1] > rates[0] ? 'increasing' : 'decreasing';
+                    const change = ((rates[rates.length - 1] - rates[0]) / rates[0] * 100).toFixed(1);
+                    
+                    document.getElementById('insight-text').innerHTML = `
+                        <strong>${county} County:</strong> Average rate over 2008-2012 is ${avgRate}%. 
+                        Trend is ${trend} with a ${Math.abs(change)}% ${trend === 'increasing' ? 'increase' : 'decrease'} from 2008 to 2012.
+                        This county contributes approximately ${countyData['2012']?.count || 0} preterm births annually.
+                    `;
+                } else {
+                    document.getElementById('insight-text').innerHTML = `
+                        <strong>${county} County:</strong> Insufficient data for trend analysis.
+                    `;
+                }
+            } else {
                 document.getElementById('insight-text').innerHTML = `
-                    <strong>${county} County:</strong> Average rate over 2008-2012 is ${avgRate}%. 
-                    Trend is ${trend} with a ${Math.abs(change)}% ${trend === 'increasing' ? 'increase' : 'decrease'} from 2008 to 2012.
-                    This county contributes approximately ${countyData['2012']?.count || 0} preterm births annually.
+                    <strong>${county} County:</strong> No data available.
                 `;
             }
             
             // Render county-specific charts
+            console.log('Rendering charts for:', county);
             renderCountyAgeAnalysis(county);
             renderCountyRaceAnalysis(county);
         }
