@@ -75,7 +75,24 @@
             backdrop-filter: blur(10px);
         }
 
-        .year-control label, .county-control label { color: white; font-size: 0.95rem; font-weight: 600; }
+        /* County control when used inline in content */
+        .county-specific .county-control {
+            background: rgba(255, 154, 139, 0.2);
+            border: 2px solid #ffb8aa;
+            backdrop-filter: none;
+        }
+
+        .year-control label { 
+            color: white; 
+            font-size: 0.95rem; 
+            font-weight: 600; 
+        }
+        
+        .county-control label { 
+            color: #d64933; 
+            font-size: 0.95rem; 
+            font-weight: 600; 
+        }
 
         .year-control select, .county-control select {
             padding: 0.5rem 1.5rem;
@@ -97,28 +114,40 @@
             box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
         }
 
-        /* Main Content */
-        .dashboard-main { flex: 1; }
+        /* Main Content - Split Layout */
+        .dashboard-main { 
+            display: grid;
+            grid-template-columns: 420px 1fr;
+            height: calc(100vh - 85px);
+        }
+
+        /* Left Side - Fixed Map Section */
+        .left-fixed-section {
+            position: sticky;
+            top: 85px;
+            height: calc(100vh - 85px);
+            overflow-y: auto;
+        }
+
+        /* Right Side - Scrollable Content */
+        .right-scrollable-section {
+            overflow-y: auto;
+            height: calc(100vh - 85px);
+        }
 
         .section-wrapper {
             margin-bottom: 2px;
         }
 
-        /* Top Section - Original Dashboard */
-        .top-section {
-            display: grid;
-            grid-template-columns: 400px 1fr;
-            min-height: 600px;
-            gap: 0;
-        }
-
+        /* Map Section Styling */
         .map-section {
-            background: rgba(255, 255, 255, 0.9);
-            border-right: 2px solid #ffb8aa;
+            background: rgba(255, 255, 255, 0.95);
+            border-right: 3px solid #ffb8aa;
             padding: 2rem;
             display: flex;
             flex-direction: column;
             box-shadow: 4px 0 6px rgba(255, 154, 139, 0.15);
+            min-height: 100%;
         }
 
         .map-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: #d64933; }
@@ -151,9 +180,9 @@
         .viz-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
-            grid-template-rows: 1fr 1fr;
             gap: 2px;
             background: #ffb8aa;
+            min-height: 500px;
         }
 
         .viz-panel {
@@ -287,35 +316,16 @@
                 <h1>Utah Preterm Births - Comprehensive Analysis</h1>
                 <p>32-33 Weeks Gestation • 2008-2012 • Multi-Dimensional Data Explorer</p>
             </div>
-            <div class="controls-wrapper">
-                <div class="year-control-wrapper">
-                    <div class="interaction-hint">You Can Interact Here</div>
-                    <div class="year-control">
-                        <label for="year-select">Year:</label>
-                        <select id="year-select">
-                            <option value="2012" selected>2012</option>
-                            <option value="2011">2011</option>
-                            <option value="2010">2010</option>
-                            <option value="2009">2009</option>
-                            <option value="2008">2008</option>
-                        </select>
-                    </div>
-                </div>
-                <div class="county-control">
-                    <label for="county-select">County Analysis:</label>
-                    <select id="county-select">
-                        <option value="all" selected>All Counties</option>
-                        <option value="Salt Lake">Salt Lake</option>
-                        <option value="Utah">Utah</option>
-                        <option value="Davis">Davis</option>
-                        <option value="Weber">Weber</option>
-                        <option value="Washington">Washington</option>
-                        <option value="Cache">Cache</option>
-                        <option value="Box Elder">Box Elder</option>
-                        <option value="Tooele">Tooele</option>
-                        <option value="Iron">Iron</option>
-                        <option value="Sevier">Sevier</option>
-                        <option value="Uintah">Uintah</option>
+            <div class="year-control-wrapper">
+                <div class="interaction-hint">You Can Interact Here</div>
+                <div class="year-control">
+                    <label for="year-select">Year:</label>
+                    <select id="year-select">
+                        <option value="2012" selected>2012</option>
+                        <option value="2011">2011</option>
+                        <option value="2010">2010</option>
+                        <option value="2009">2009</option>
+                        <option value="2008">2008</option>
                     </select>
                 </div>
             </div>
@@ -323,171 +333,196 @@
 
         <!-- Main Dashboard -->
         <div class="dashboard-main">
-            <!-- Original Top Section -->
-            <div class="section-wrapper">
-                <div class="top-section">
-                    <div class="map-section">
-                        <h2 class="map-title">Geographic Distribution</h2>
-                        <div class="map-container" id="map-container">
-                            <div class="loading">Loading map...</div>
-                        </div>
-                        <div class="map-legend">
-                            <div class="legend-title">Preterm Birth Rate</div>
-                            <div class="legend-items">
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #4ade80;"></div>
-                                    <span>Low (&lt;1.0%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #fbbf24;"></div>
-                                    <span>Moderate (1.0-1.3%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #fb923c;"></div>
-                                    <span>Elevated (1.3-1.7%)</span>
-                                </div>
-                                <div class="legend-item">
-                                    <div class="legend-color" style="background: #f87171;"></div>
-                                    <span>High (&gt;1.7%)</span>
-                                </div>
-                            </div>
-                            <div class="legend-title" style="margin-top: 1rem;">Circle Size</div>
-                            <div class="legend-items">
-                                <div class="legend-item">
-                                    <span>Proportional to total births</span>
-                                </div>
-                            </div>
-                        </div>
+            <!-- Left Side - FIXED MAP -->
+            <div class="left-fixed-section">
+                <div class="map-section">
+                    <h2 class="map-title">Geographic Distribution</h2>
+                    <div class="map-container" id="map-container">
+                        <div class="loading">Loading map...</div>
                     </div>
-
-                    <div class="viz-section">
-                        <div class="viz-panel">
-                            <div class="viz-header">
-                                <h3>Preterm Births by Maternal Age</h3>
-                                <p>Rate by age group</p>
+                    <div class="map-legend">
+                        <div class="legend-title">Preterm Birth Rate</div>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #4ade80;"></div>
+                                <span>Low (&lt;1.0%)</span>
                             </div>
-                            <div class="viz-content" id="age-chart">
-                                <div class="loading">Loading...</div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #fbbf24;"></div>
+                                <span>Moderate (1.0-1.3%)</span>
                             </div>
-                        </div>
-
-                        <div class="viz-panel">
-                            <div class="viz-header">
-                                <h3>Preterm Births by Race/Ethnicity</h3>
-                                <p>Rate by demographic group</p>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #fb923c;"></div>
+                                <span>Elevated (1.3-1.7%)</span>
                             </div>
-                            <div class="viz-content" id="race-chart">
-                                <div class="loading">Loading...</div>
-                            </div>
-                        </div>
-
-                        <div class="viz-panel">
-                            <div class="viz-header">
-                                <h3>Age Group Trends</h3>
-                                <p>Cases by year and age</p>
-                            </div>
-                            <div class="viz-content" id="age-heatmap">
-                                <div class="loading">Loading...</div>
+                            <div class="legend-item">
+                                <div class="legend-color" style="background: #f87171;"></div>
+                                <span>High (&gt;1.7%)</span>
                             </div>
                         </div>
-
-                        <div class="viz-panel">
-                            <div class="viz-header">
-                                <h3>Race/Ethnicity Trends</h3>
-                                <p>Cases by year and demographic</p>
-                            </div>
-                            <div class="viz-content" id="race-heatmap">
-                                <div class="loading">Loading...</div>
+                        <div class="legend-title" style="margin-top: 1rem;">Circle Size</div>
+                        <div class="legend-items">
+                            <div class="legend-item">
+                                <span>Proportional to total births</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
 
-            <!-- County Comparison Section -->
-            <div class="section-wrapper">
-                <div class="full-width-section">
-                    <h2 class="section-title">County Analysis & Comparison</h2>
-                    <p class="section-subtitle">Explore geographic patterns and trends across Utah counties</p>
-                    
-                    <div class="chart-grid">
-                        <div class="chart-container">
-                            <h3 class="chart-title">County Trends Over Time</h3>
-                            <p class="chart-description">Line chart showing each county's 5-year trend (2008-2012)</p>
-                            <div id="county-trends-chart" style="min-height: 350px;"></div>
+            <!-- Right Side - SCROLLABLE CONTENT -->
+            <div class="right-scrollable-section">
+                <!-- Top: Age & Race Charts -->
+                <div class="viz-section">
+                    <div class="viz-panel">
+                        <div class="viz-header">
+                            <h3>Preterm Births by Maternal Age</h3>
+                            <p>Rate by age group</p>
                         </div>
-
-                        <div class="chart-container">
-                            <h3 class="chart-title">County Ranking (2012)</h3>
-                            <p class="chart-description">Counties ranked by preterm birth rate</p>
-                            <div id="county-ranking-chart" style="min-height: 350px;"></div>
+                        <div class="viz-content" id="age-chart">
+                            <div class="loading">Loading...</div>
                         </div>
+                    </div>
 
-                        <div class="chart-container">
-                            <h3 class="chart-title">County Clustering</h3>
-                            <p class="chart-description">Counties grouped by rate ranges and geographic patterns</p>
-                            <div id="county-clustering-chart" style="min-height: 350px;"></div>
+                    <div class="viz-panel">
+                        <div class="viz-header">
+                            <h3>Preterm Births by Race/Ethnicity</h3>
+                            <p>Rate by demographic group</p>
                         </div>
+                        <div class="viz-content" id="race-chart">
+                            <div class="loading">Loading...</div>
+                        </div>
+                    </div>
 
-                        <div class="chart-container">
-                            <h3 class="chart-title">Population-Weighted Impact</h3>
-                            <p class="chart-description">Case count vs. rate - identifying where resources are needed</p>
-                            <div id="population-weighted-chart" style="min-height: 350px;"></div>
+                    <div class="viz-panel">
+                        <div class="viz-header">
+                            <h3>Age Group Trends</h3>
+                            <p>Cases by year and age</p>
+                        </div>
+                        <div class="viz-content" id="age-heatmap">
+                            <div class="loading">Loading...</div>
+                        </div>
+                    </div>
+
+                    <div class="viz-panel">
+                        <div class="viz-header">
+                            <h3>Race/Ethnicity Trends</h3>
+                            <p>Cases by year and demographic</p>
+                        </div>
+                        <div class="viz-content" id="race-heatmap">
+                            <div class="loading">Loading...</div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- Age-Focused Analysis Section -->
-            <div class="section-wrapper">
-                <div class="full-width-section">
-                    <h2 class="section-title">Age-Focused Analysis</h2>
-                    <p class="section-subtitle">Deep dive into maternal age patterns and risk factors</p>
-                    
-                    <div class="chart-grid">
-                        <div class="chart-container">
-                            <h3 class="chart-title">Teen Births Analysis (&lt;18 Years)</h3>
-                            <p class="chart-description">Teen mothers vs. adult mothers comparison</p>
-                            <div id="teen-births-chart" style="min-height: 350px;"></div>
-                        </div>
+                <!-- County Comparison Section -->
+                <div class="section-wrapper">
+                    <div class="full-width-section">
+                        <h2 class="section-title">County Analysis & Comparison</h2>
+                        <p class="section-subtitle">Explore geographic patterns and trends across Utah counties</p>
+                        
+                        <div class="chart-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">County Trends Over Time</h3>
+                                <p class="chart-description">Line chart showing each county's 5-year trend (2008-2012)</p>
+                                <div id="county-trends-chart" style="min-height: 350px;"></div>
+                            </div>
 
-                        <div class="chart-container">
-                            <h3 class="chart-title">Advanced Maternal Age (35+)</h3>
-                            <p class="chart-description">Risk increases with maternal age</p>
-                            <div id="advanced-age-chart" style="min-height: 350px;"></div>
-                        </div>
+                            <div class="chart-container">
+                                <h3 class="chart-title">County Ranking (2012)</h3>
+                                <p class="chart-description">Counties ranked by preterm birth rate</p>
+                                <div id="county-ranking-chart" style="min-height: 350px;"></div>
+                            </div>
 
-                        <div class="chart-container" style="grid-column: 1 / -1;">
-                            <h3 class="chart-title">Age Group Comparison Bubble Chart</h3>
-                            <p class="chart-description">Bubble size = total births, position shows rate and count</p>
-                            <div id="age-bubble-chart" style="min-height: 400px;"></div>
+                            <div class="chart-container">
+                                <h3 class="chart-title">County Clustering</h3>
+                                <p class="chart-description">Counties grouped by rate ranges and geographic patterns</p>
+                                <div id="county-clustering-chart" style="min-height: 350px;"></div>
+                            </div>
+
+                            <div class="chart-container">
+                                <h3 class="chart-title">Population-Weighted Impact</h3>
+                                <p class="chart-description">Case count vs. rate - identifying where resources are needed</p>
+                                <div id="population-weighted-chart" style="min-height: 350px;"></div>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
 
-            <!-- County-Specific Analysis Section -->
-            <div class="section-wrapper" id="county-specific-section" style="display: none;">
-                <div class="county-specific">
-                    <h2 class="section-title">County-Specific Analysis: <span id="selected-county-name">Salt Lake</span></h2>
-                    <p class="section-subtitle">Detailed breakdown for selected county</p>
-                    
-                    <div class="insight-box" id="county-insights">
-                        <h4>Key Insights</h4>
-                        <p id="insight-text">Loading insights...</p>
-                    </div>
+                <!-- Age-Focused Analysis Section -->
+                <div class="section-wrapper">
+                    <div class="full-width-section">
+                        <h2 class="section-title">Age-Focused Analysis</h2>
+                        <p class="section-subtitle">Deep dive into maternal age patterns and risk factors</p>
+                        
+                        <div class="chart-grid">
+                            <div class="chart-container">
+                                <h3 class="chart-title">Teen Births Analysis (&lt;18 Years)</h3>
+                                <p class="chart-description">Teen mothers vs. adult mothers comparison</p>
+                                <div id="teen-births-chart" style="min-height: 350px;"></div>
+                            </div>
 
-                    <div class="chart-grid">
-                        <div class="chart-container">
-                            <h3 class="chart-title">County × Age Analysis</h3>
-                            <p class="chart-description">Age group breakdown for this county</p>
-                            <div id="county-age-chart" style="min-height: 350px;"></div>
+                            <div class="chart-container">
+                                <h3 class="chart-title">Advanced Maternal Age (35+)</h3>
+                                <p class="chart-description">Risk increases with maternal age</p>
+                                <div id="advanced-age-chart" style="min-height: 350px;"></div>
+                            </div>
+
+                            <div class="chart-container" style="grid-column: 1 / -1;">
+                                <h3 class="chart-title">Age Group Comparison Bubble Chart</h3>
+                                <p class="chart-description">Bubble size = total births, position shows rate and count</p>
+                                <div id="age-bubble-chart" style="min-height: 400px;"></div>
+                            </div>
                         </div>
+                    </div>
+                </div>
 
-                        <div class="chart-container">
-                            <h3 class="chart-title">County × Race Analysis</h3>
-                            <p class="chart-description">Racial/ethnic breakdown for this county</p>
-                            <div id="county-race-chart" style="min-height: 350px;"></div>
+                <!-- County-Specific Analysis Section -->
+                <div class="section-wrapper">
+                    <div class="county-specific">
+                        <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 1.5rem;">
+                            <div>
+                                <h2 class="section-title" style="margin-bottom: 0;">County-Specific Analysis</h2>
+                                <p class="section-subtitle" style="margin-bottom: 0;">Select a county to view detailed breakdown</p>
+                            </div>
+                            <div class="county-control">
+                                <label for="county-select">Select County:</label>
+                                <select id="county-select">
+                                    <option value="all" selected>-- Choose a County --</option>
+                                    <option value="Salt Lake">Salt Lake</option>
+                                    <option value="Utah">Utah</option>
+                                    <option value="Davis">Davis</option>
+                                    <option value="Weber">Weber</option>
+                                    <option value="Washington">Washington</option>
+                                    <option value="Cache">Cache</option>
+                                    <option value="Box Elder">Box Elder</option>
+                                    <option value="Tooele">Tooele</option>
+                                    <option value="Iron">Iron</option>
+                                    <option value="Sevier">Sevier</option>
+                                    <option value="Uintah">Uintah</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div id="county-detail-content" style="display: none;">
+                            <div class="insight-box" id="county-insights">
+                                <h4>Key Insights for <span id="selected-county-name">County</span></h4>
+                                <p id="insight-text">Loading insights...</p>
+                            </div>
+
+                            <div class="chart-grid">
+                                <div class="chart-container">
+                                    <h3 class="chart-title">County × Age Analysis</h3>
+                                    <p class="chart-description">Age group breakdown for this county</p>
+                                    <div id="county-age-chart" style="min-height: 350px;"></div>
+                                </div>
+
+                                <div class="chart-container">
+                                    <h3 class="chart-title">County × Race Analysis</h3>
+                                    <p class="chart-description">Racial/ethnic breakdown for this county</p>
+                                    <div id="county-race-chart" style="min-height: 350px;"></div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -1410,12 +1445,14 @@
         }
 
         function updateCountySpecific(county) {
+            const detailContent = document.getElementById('county-detail-content');
+            
             if (county === 'all') {
-                document.getElementById('county-specific-section').style.display = 'none';
+                detailContent.style.display = 'none';
                 return;
             }
             
-            document.getElementById('county-specific-section').style.display = 'block';
+            detailContent.style.display = 'block';
             document.getElementById('selected-county-name').textContent = county;
             
             // Generate insights
