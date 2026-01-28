@@ -19,13 +19,13 @@
 
         /* Header */
         .dashboard-header {
-            background: linear-gradient(135deg, #ff9a8b 0%, #ff7e7e 100%);
+            background: #F7C4D8;
             padding: 1.5rem 2rem;
-            border-bottom: 3px solid #e86a5d;
+            border-bottom: 3px solid #e8a8c4;
             display: flex;
             justify-content: space-between;
             align-items: center;
-            box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
+            box-shadow: 0 4px 6px rgba(247, 196, 216, 0.3);
             position: sticky;
             top: 0;
             z-index: 100;
@@ -35,11 +35,11 @@
             font-size: 1.8rem;
             font-weight: 700;
             margin-bottom: 0.25rem;
-            color: #0f172a;
+            color: #4a4a4a;
             text-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
         }
 
-        .title-section p { color: rgba(255, 255, 255, 0.95); font-size: 0.9rem; }
+        .title-section p { color: #6b6b6b; font-size: 0.9rem; }
 
         .controls-wrapper {
             display: flex;
@@ -53,7 +53,7 @@
             font-size: 0.75rem;
             text-transform: uppercase;
             letter-spacing: 1px;
-            color: #fff4e6;
+            color: #6b6b6b;
             font-weight: 600;
             display: flex;
             align-items: center;
@@ -77,13 +77,13 @@
 
         /* County control when used inline in content */
         .county-specific .county-control {
-            background: rgba(255, 154, 139, 0.2);
-            border: 2px solid #ffb8aa;
+            background: rgba(247, 196, 216, 0.2);
+            border: 2px solid #F7C4D8;
             backdrop-filter: none;
         }
 
         .year-control label { 
-            color: white; 
+            color: #4a4a4a; 
             font-size: 0.95rem; 
             font-weight: 600; 
         }
@@ -97,21 +97,21 @@
         .year-control select, .county-control select {
             padding: 0.5rem 1.5rem;
             background: white;
-            border: 2px solid #e86a5d;
+            border: 2px solid #e8a8c4;
             border-radius: 8px;
-            color: #d64933;
+            color: #c084a1;
             font-size: 1rem;
             font-weight: 600;
             cursor: pointer;
             transition: all 0.2s;
-            box-shadow: 0 2px 4px rgba(232, 106, 93, 0.2);
+            box-shadow: 0 2px 4px rgba(247, 196, 216, 0.3);
         }
 
         .year-control select:hover, .county-control select:hover {
-            background: #fff8f5;
-            border-color: #ff7e7e;
+            background: #fff8fc;
+            border-color: #F7C4D8;
             transform: translateY(-1px);
-            box-shadow: 0 4px 6px rgba(232, 106, 93, 0.3);
+            box-shadow: 0 4px 6px rgba(247, 196, 216, 0.4);
         }
 
         /* Main Content - Split Layout */
@@ -142,15 +142,15 @@
         /* Map Section Styling */
         .map-section {
             background: rgba(255, 255, 255, 0.95);
-            border-right: 3px solid #ffb8aa;
+            border-right: 3px solid #F7C4D8;
             padding: 2rem;
             display: flex;
             flex-direction: column;
-            box-shadow: 4px 0 6px rgba(255, 154, 139, 0.15);
+            box-shadow: 4px 0 6px rgba(247, 196, 216, 0.2);
             min-height: 100%;
         }
 
-        .map-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: #0f172a; }
+        .map-title { font-size: 1.2rem; font-weight: 600; margin-bottom: 1.5rem; color: #6b6b6b; }
 
         .map-container {
             flex: 1;
@@ -159,7 +159,7 @@
             justify-content: center;
             position: relative;
             min-height: 400px;
-            background: rgba(255, 212, 196, 0.3);
+            background: rgba(247, 196, 216, 0.15);
             border-radius: 12px;
             padding: 1rem;
         }
@@ -167,21 +167,21 @@
         .map-legend {
             margin-top: 1.5rem;
             padding: 1rem;
-            background: rgba(255, 184, 170, 0.2);
+            background: rgba(247, 196, 216, 0.2);
             border-radius: 8px;
-            border: 1px solid #ffb8aa;
+            border: 1px solid #F7C4D8;
         }
 
-        .legend-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: #0f172a; }
+        .legend-title { font-size: 0.85rem; font-weight: 600; margin-bottom: 0.75rem; color: #6b6b6b; }
         .legend-items { display: flex; flex-direction: column; gap: 0.5rem; }
-        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #1f2937; }
-        .legend-color { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #0f172a; }
+        .legend-item { display: flex; align-items: center; gap: 0.5rem; font-size: 0.8rem; color: #4a4a4a; }
+        .legend-color { width: 16px; height: 16px; border-radius: 50%; border: 2px solid #6b6b6b; }
 
         .viz-section {
             display: grid;
             grid-template-columns: 1fr 1fr;
             gap: 2px;
-            background: #ffb8aa;
+            background: #F7C4D8;
             min-height: 500px;
         }
 
@@ -193,9 +193,9 @@
             overflow: auto;
         }
 
-        .viz-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #ffd4c4; }
-        .viz-header h3 { font-size: 1rem; font-weight: 600; color: #0f172a; margin-bottom: 0.25rem; }
-        .viz-header p { font-size: 0.8rem; color: #6b7280; }
+        .viz-header { margin-bottom: 1rem; padding-bottom: 0.75rem; border-bottom: 2px solid #F7C4D8; }
+        .viz-header h3 { font-size: 1rem; font-weight: 600; color: #6b6b6b; margin-bottom: 0.25rem; }
+        .viz-header p { font-size: 0.8rem; color: #8b8b8b; }
         .viz-content { flex: 1; display: flex; align-items: center; justify-content: center; position: relative; min-height: 200px; }
 
         /* New Sections */
@@ -208,15 +208,15 @@
         .section-title {
             font-size: 1.5rem;
             font-weight: 700;
-            color: #0f172a;
+            color: #6b6b6b;
             margin-bottom: 0.5rem;
             padding-bottom: 0.5rem;
-            border-bottom: 3px solid #ffd4c4;
+            border-bottom: 3px solid #F7C4D8;
         }
 
         .section-subtitle {
             font-size: 0.9rem;
-            color: #6b7280;
+            color: #8b8b8b;
             margin-bottom: 2rem;
         }
 
@@ -231,26 +231,26 @@
             background: white;
             padding: 1.5rem;
             border-radius: 12px;
-            border: 2px solid #ffd4c4;
-            box-shadow: 0 2px 8px rgba(255, 154, 139, 0.1);
+            border: 2px solid #F7C4D8;
+            box-shadow: 0 2px 8px rgba(247, 196, 216, 0.3);
         }
 
         .chart-title {
             font-size: 1.1rem;
             font-weight: 600;
-            color: #0f172a;
+            color: #6b6b6b;
             margin-bottom: 0.5rem;
         }
 
         .chart-description {
             font-size: 0.85rem;
-            color: #1f2937;
+            color: #8b8b8b;
             margin-bottom: 1rem;
         }
 
         /* County Specific Section */
         .county-specific {
-            background: linear-gradient(135deg, rgba(255, 212, 196, 0.5) 0%, rgba(255, 196, 184, 0.5) 100%);
+            background: white;
             padding: 2rem;
             margin: 2px 0;
         }
@@ -260,17 +260,17 @@
         .county-circle:hover, .line-point:hover { filter: brightness(1.1); }
         .bar:hover rect, .heatmap-cell:hover rect { opacity: 0.8; }
         
-        .county-text, .heatmap-text { pointer-events: none; fill: #2d1a18; font-weight: 600; }
-        .axis-label { fill: #4b5563; font-size: 11px; }
-        .axis-line { stroke: #ffb8aa; stroke-width: 2; }
-        .heatmap-label { fill: #4b5563; font-size: 11px; }
+        .county-text, .heatmap-text { pointer-events: none; fill: #4a4a4a; font-weight: 600; }
+        .axis-label { fill: #6b6b6b; font-size: 11px; }
+        .axis-line { stroke: #F7C4D8; stroke-width: 2; }
+        .heatmap-label { fill: #6b6b6b; font-size: 11px; }
 
         .loading { text-align: center; color: #ff7e7e; padding: 2rem; }
         .error { text-align: center; color: #dc2626; padding: 1rem; background: rgba(220, 38, 38, 0.1); border-radius: 8px; font-size: 0.9rem; border: 1px solid #fca5a5; }
 
         .tooltip {
             position: fixed;
-            background: linear-gradient(135deg, #d64933 0%, #ff7e7e 100%);
+            background: linear-gradient(135deg, #c084a1 0%, #d8a8bf 100%);
             color: white;
             padding: 0.75rem 1rem;
             border-radius: 8px;
@@ -279,8 +279,8 @@
             opacity: 0;
             transition: opacity 0.2s;
             z-index: 1000;
-            border: 2px solid #ff9a8b;
-            box-shadow: 0 4px 12px rgba(214, 73, 51, 0.4);
+            border: 2px solid #F7C4D8;
+            box-shadow: 0 4px 12px rgba(247, 196, 216, 0.5);
             max-width: 250px;
         }
 
@@ -289,21 +289,21 @@
         .tooltip-value { color: rgba(255, 255, 255, 0.95); font-size: 0.8rem; }
 
         .insight-box {
-            background: rgba(255, 212, 196, 0.3);
-            border-left: 4px solid #0f172a;
+            background: rgba(247, 196, 216, 0.2);
+            border-left: 4px solid #c084a1;
             padding: 1rem;
             margin: 1rem 0;
             border-radius: 4px;
         }
 
         .insight-box h4 {
-            color: #0f172a;
+            color: #6b6b6b;
             font-size: 0.95rem;
             margin-bottom: 0.5rem;
         }
 
         .insight-box p {
-            color: #1f2937;
+            color: #4a4a4a;
             font-size: 0.85rem;
         }
         
@@ -424,7 +424,7 @@
                                     <h3>Age Group Trends</h3>
                                     <p>Cases by year and age</p>
                                 </div>
-                                <select id="age-heatmap-mode" style="padding: 0.5rem; border: 2px solid #ffb8aa; border-radius: 6px; background: white; color: #d64933; font-weight: 600; cursor: pointer;">
+                                <select id="age-heatmap-mode" style="padding: 0.5rem; border: 2px solid #F7C4D8; border-radius: 6px; background: white; color: #c084a1; font-weight: 600; cursor: pointer;">
                                     <option value="count">Cases</option>
                                     <option value="rate">Rate (%)</option>
                                     <option value="total">Total Births</option>
@@ -443,7 +443,7 @@
                                     <h3>Race/Ethnicity Trends</h3>
                                     <p>Cases by year and demographic</p>
                                 </div>
-                                <select id="race-heatmap-mode" style="padding: 0.5rem; border: 2px solid #ffb8aa; border-radius: 6px; background: white; color: #d64933; font-weight: 600; cursor: pointer;">
+                                <select id="race-heatmap-mode" style="padding: 0.5rem; border: 2px solid #F7C4D8; border-radius: 6px; background: white; color: #c084a1; font-weight: 600; cursor: pointer;">
                                     <option value="count">Cases</option>
                                     <option value="rate">Rate (%)</option>
                                     <option value="total">Total Births</option>
@@ -461,6 +461,12 @@
                     <div class="full-width-section">
                         <h2 class="section-title">Age-Focused Analysis</h2>
                         <p class="section-subtitle">Deep dive into maternal age patterns and risk factors</p>
+                        
+                        <div id="age-analysis-description" style="background: rgba(247, 196, 216, 0.2); padding: 1rem 1.5rem; border-radius: 8px; margin-bottom: 2rem; border-left: 4px solid #c084a1;">
+                            <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                                Loading age analysis...
+                            </p>
+                        </div>
                         
                         <div class="chart-grid">
                             <div class="chart-container">
@@ -533,8 +539,8 @@
                                 </div>
                             </div>
 
-                            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(255, 212, 196, 0.2); border-radius: 12px; border: 1px solid #ffb8aa;">
-                                <p style="color: #1f2937; font-size: 0.9rem; text-align: center;">
+                            <div style="margin-top: 2rem; padding: 1.5rem; background: rgba(247, 196, 216, 0.15); border-radius: 12px; border: 1px solid #F7C4D8;">
+                                <p style="color: #4a4a4a; font-size: 0.9rem; text-align: center;">
                                     <strong>Note:</strong> Ethnicity-specific data at the county level is not available in this dataset. 
                                     The data contains only total counts per county per year. For ethnicity breakdowns, please refer to the 
                                     state-level Race/Ethnicity charts above.
@@ -808,8 +814,8 @@
             let svgHTML = `
                 <svg viewBox="0 0 100 120" xmlns="http://www.w3.org/2000/svg" style="max-width: 350px;">
                     <path d="M 30 5 L 70 5 L 70 110 L 30 110 L 30 85 L 20 85 L 20 30 L 30 30 Z" 
-                          fill="rgba(255, 184, 170, 0.2)" 
-                          stroke="#ffb8aa" 
+                          fill="rgba(247, 196, 216, 0.15)" 
+                          stroke="#F7C4D8" 
                           stroke-width="1"/>
             `;
             
@@ -822,7 +828,7 @@
                 svgHTML += `
                     <g class="county-circle" data-county="${data.name}" data-rate="${data.rate}" data-count="${data.count}" data-births="${data.totalBirths}">
                         <circle cx="${cx}" cy="${cy}" r="${r}" fill="${color}" opacity="0.9" 
-                                stroke="#d64933" stroke-width="1"/>
+                                stroke="#c084a1" stroke-width="1"/>
                         <text x="${cx}" y="${cy + 1}" text-anchor="middle" class="county-text" font-size="3">${data.rate.toFixed(1)}%</text>
                     </g>
                 `;
@@ -1005,7 +1011,8 @@
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
                     const intensity = maxValue > 0 ? (value / maxValue) : 0;
-                    const color = `rgba(255, 126, 126, ${intensity * 0.7 + 0.3})`;
+                    // Use purple gradient instead of red
+                    const color = `rgba(167, 139, 250, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
@@ -1019,7 +1026,7 @@
                         <g class="heatmap-cell" data-year="${year}" data-age="${ageGroup}" 
                             data-count="${ageData?.count || 0}" data-rate="${ageData?.rate || 0}" data-total="${ageData?.total || 0}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                  fill="${color}" stroke="#ffb8aa" stroke-width="1" rx="4"/>
+                                  fill="${color}" stroke="#a78bfa" stroke-width="1" rx="4"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
                                   text-anchor="middle" class="heatmap-text" font-size="10">${displayValue}</text>
                         </g>
@@ -1103,7 +1110,8 @@
             heatmapData.forEach((yearData, i) => {
                 yearData.forEach((value, j) => {
                     const intensity = maxValue > 0 ? (value / maxValue) : 0;
-                    const color = `rgba(255, 154, 139, ${intensity * 0.7 + 0.3})`;
+                    // Use teal/cyan gradient instead of red/orange
+                    const color = `rgba(94, 234, 212, ${intensity * 0.7 + 0.3})`;
                     const x = padding.left + i * cellWidth;
                     const y = padding.top + j * cellHeight;
                     
@@ -1117,7 +1125,7 @@
                         <g class="heatmap-cell" data-year="${year}" data-race="${race}" 
                             data-count="${raceData?.count || 0}" data-rate="${raceData?.rate || 0}" data-total="${raceData?.total || 0}">
                             <rect x="${x}" y="${y}" width="${cellWidth-2}" height="${cellHeight-2}" 
-                                  fill="${color}" stroke="#e86a5d" stroke-width="1" rx="4"/>
+                                  fill="${color}" stroke="#5eead4" stroke-width="1" rx="4"/>
                             <text x="${x + cellWidth/2}" y="${y + cellHeight/2 + 5}" 
                                   text-anchor="middle" class="heatmap-text" font-size="11">${displayValue}</text>
                         </g>
@@ -1573,6 +1581,48 @@
             document.getElementById('county-race-chart').innerHTML = svgHTML;
         }
 
+        function updateAgeAnalysisDescription(year) {
+            const ageData = stateData[year]?.age;
+            if (!ageData) return;
+            
+            // Get the state total for this year
+            const stateTotalData = allData[year];
+            let stateAvgRate = 0;
+            if (stateTotalData && Object.keys(stateTotalData).length > 0) {
+                const rates = Object.values(stateTotalData).map(d => d.rate);
+                stateAvgRate = (rates.reduce((a, b) => a + b, 0) / rates.length);
+            }
+            
+            // Find the highest and lowest risk age groups
+            const ageGroups = ['<18', '15-19', '20-24', '25-29', '30-34', '35-39', '40 and over'];
+            const ageRates = ageGroups
+                .filter(ag => ageData[ag])
+                .map(ag => ({ age: ag, rate: ageData[ag].rate }))
+                .sort((a, b) => b.rate - a.rate);
+            
+            if (ageRates.length === 0) return;
+            
+            const highestRisk = ageRates[0];
+            const lowestRisk = ageRates[ageRates.length - 1];
+            
+            // Identify age extremes (youngest and oldest)
+            const youngest = ageData['<18'] || ageData['15-19'];
+            const oldest = ageData['40 and over'] || ageData['35-39'];
+            
+            let description = `While the state average for preterm births was ${stateAvgRate.toFixed(1)}% in ${year}, the risk increases at the age extremes. `;
+            
+            if (youngest && oldest) {
+                description += `Teen mothers (under 18) had a ${youngest.rate.toFixed(1)}% rate, while mothers 40 and over had a ${oldest.rate.toFixed(1)}% rate. `;
+            }
+            
+            description += `The age group with the highest risk was ${highestRisk.age} at ${highestRisk.rate.toFixed(1)}%, while ${lowestRisk.age} had the lowest rate at ${lowestRisk.rate.toFixed(1)}%.`;
+            
+            const descElement = document.getElementById('age-analysis-description');
+            if (descElement) {
+                descElement.innerHTML = `<p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">${description}</p>`;
+            }
+        }
+
         function updateDashboard(year) {
             renderMap(year);
             renderAgeChart(year);
@@ -1582,6 +1632,9 @@
             renderTeenBirths(year);
             renderAdvancedAge(year);
             renderAgeBubble(year);
+            
+            // Update the age analysis description
+            updateAgeAnalysisDescription(year);
         }
 
         async function init() {
