@@ -1624,7 +1624,29 @@
                 description += `Teen mothers (under 18) had a ${youngest.rate.toFixed(1)}% rate, while ${oldestLabel} had a ${oldest.rate.toFixed(1)}% rate. `;
             }
             
-            description += `The age group with the highest risk was ${highestRisk.age} at ${highestRisk.rate.toFixed(1)}%, while ${lowestRisk.age} had the lowest rate at ${lowestRisk.rate.toFixed(1)}%.`;
+            // Format the age group name properly for display
+            let lowestAgeDisplay = lowestRisk.age;
+            // Group 20-24, 25-29, and 30-34 as "20-34"
+            if (lowestRisk.age === '20-24' || lowestRisk.age === '25-29' || lowestRisk.age === '30-34') {
+                lowestAgeDisplay = 'mothers aged 20-34';
+            } else if (lowestRisk.age === '<18') {
+                lowestAgeDisplay = 'mothers under 18';
+            } else if (lowestRisk.age === '40 and over') {
+                lowestAgeDisplay = 'mothers 40 and over';
+            } else {
+                lowestAgeDisplay = `mothers aged ${lowestRisk.age}`;
+            }
+            
+            let highestAgeDisplay = highestRisk.age;
+            if (highestRisk.age === '<18') {
+                highestAgeDisplay = 'mothers under 18';
+            } else if (highestRisk.age === '40 and over') {
+                highestAgeDisplay = 'mothers 40 and over';
+            } else {
+                highestAgeDisplay = `mothers aged ${highestRisk.age}`;
+            }
+            
+            description += `The age group with the highest risk was ${highestAgeDisplay} at ${highestRisk.rate.toFixed(1)}%, while ${lowestAgeDisplay} had the lowest rate at ${lowestRisk.rate.toFixed(1)}%.`;
             
             const descElement = document.getElementById('age-analysis-description');
             if (descElement) {
