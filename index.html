@@ -1607,12 +1607,21 @@
             
             // Identify age extremes (youngest and oldest)
             const youngest = ageData['<18'] || ageData['15-19'];
-            const oldest = ageData['40 and over'] || ageData['35-39'];
+            
+            // For 2008 and 2009, use 35-39 as "oldest" since 40+ data is not available
+            let oldest, oldestLabel;
+            if ((year === '2008' || year === '2009') && !ageData['40 and over'] && ageData['35-39']) {
+                oldest = ageData['35-39'];
+                oldestLabel = 'mothers above 35';
+            } else {
+                oldest = ageData['40 and over'] || ageData['35-39'];
+                oldestLabel = 'mothers 40 and over';
+            }
             
             let description = `While the state average for preterm births was ${stateAvgRate.toFixed(1)}% in ${year}, the risk increases at the age extremes. `;
             
             if (youngest && oldest) {
-                description += `Teen mothers (under 18) had a ${youngest.rate.toFixed(1)}% rate, while mothers 40 and over had a ${oldest.rate.toFixed(1)}% rate. `;
+                description += `Teen mothers (under 18) had a ${youngest.rate.toFixed(1)}% rate, while ${oldestLabel} had a ${oldest.rate.toFixed(1)}% rate. `;
             }
             
             description += `The age group with the highest risk was ${highestRisk.age} at ${highestRisk.rate.toFixed(1)}%, while ${lowestRisk.age} had the lowest rate at ${lowestRisk.rate.toFixed(1)}%.`;
