@@ -354,73 +354,155 @@
             </div>
         </div>
 <!-- Context Section -->
-        <div style="background: linear-gradient(135deg, rgba(247, 196, 216, 0.3) 0%, rgba(255, 255, 255, 0.95) 100%); padding: 2rem 3rem; border-bottom: 3px solid #F7C4D8; box-shadow: 0 4px 6px rgba(247, 196, 216, 0.2);">
-            <h2 style="font-size: 1.4rem; font-weight: 700; color: #6b6b6b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
-                <span style="font-size: 1.8rem;">📊</span>
-                Background & Context
-            </h2>
-            <div style="display: grid; gap: 1rem;">
-                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
-                    <span style="font-size: 1.5rem; min-width: 30px;">🏥</span>
-                    <div style="flex: 1;">
-                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">
-                            Preterm birth affects <strong>12.3%</strong> (1 of every 10 infants) of all births in the United States, representing a significant public health challenge despite advances in neonatal care.
-                        </p>
-                    </div>
+<div style="background: linear-gradient(135deg, rgba(247, 196, 216, 0.3) 0%, rgba(255, 255, 255, 0.95) 100%); padding: 2rem 3rem; border-bottom: 3px solid #F7C4D8; box-shadow: 0 4px 6px rgba(247, 196, 216, 0.2);">
+    <h2 style="font-size: 1.4rem; font-weight: 700; color: #6b6b6b; margin-bottom: 1.5rem; display: flex; align-items: center; gap: 0.75rem;">
+        <span style="font-size: 1.8rem;">📊</span>
+        Background & Context
+    </h2>
+    
+    <!-- US Overview Section -->
+    <div style="display: grid; grid-template-columns: 400px 1fr; gap: 2rem; margin-bottom: 2rem;">
+        <!-- US Map -->
+        <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #F7C4D8; box-shadow: 0 2px 8px rgba(247, 196, 216, 0.3);">
+            <h3 style="font-size: 1.1rem; font-weight: 600; color: #6b6b6b; margin-bottom: 1rem; text-align: center;">United States</h3>
+            <svg viewBox="0 0 960 600" style="width: 100%; height: auto;">
+                <!-- Simplified US Map - all states in light gray -->
+                <path d="M 50 100 L 900 100 L 900 500 L 50 500 Z" fill="#e5e7eb" stroke="#9ca3af" stroke-width="2"/>
+                <!-- Representing major US regions as simplified shapes -->
+                <rect x="700" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="500" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="300" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="100" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="700" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="500" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="300" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <rect x="100" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                <text x="480" y="320" text-anchor="middle" fill="#6b7280" font-size="18" font-weight="600">United States</text>
+            </svg>
+        </div>
+        
+        <!-- US Stats -->
+        <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
+                <span style="font-size: 1.5rem; min-width: 30px;">🏥</span>
+                <div style="flex: 1;">
+                    <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                        Preterm birth affects <strong>12.3%</strong> (1 of every 10 infants) of all births in the United States, representing a significant public health challenge despite advances in neonatal care.
+                    </p>
                 </div>
-                
-                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
-                    <span style="font-size: 1.5rem; min-width: 30px;">👶</span>
-                    <div style="flex: 1;">
-                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
-                            Preterm infants face significant risks of long-term neurodevelopmental complications, hearing impairment, and cognitive difficulties.
-                        </p>
-                        <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11205595/#:~:text=Newborns%20born%20before%20the%20end,and%20gastrointestinal%20disturbances%20%5B10%5D" 
-                           target="_blank" 
-                           style="color: #c084a1; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
-                            📄 View Source
-                        </a>
-                    </div>
+            </div>
+            
+            <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
+                <span style="font-size: 1.5rem; min-width: 30px;">👶</span>
+                <div style="flex: 1;">
+                    <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+                        Preterm infants face significant risks of long-term neurodevelopmental complications, hearing impairment, and cognitive difficulties.
+                    </p>
+                    <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC11205595/" 
+                       target="_blank" 
+                       style="color: #c084a1; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                        📄 View Source
+                    </a>
                 </div>
-                
-                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
-                    <span style="font-size: 1.5rem; min-width: 30px;">🤰</span>
-                    <div style="flex: 1;">
-                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
-                            Maternal age is a factor in having preterm birth - <strong>advanced maternal ages (40+)</strong> has a high risk factor for preterm birth.
-                        </p>
-                        <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5791955/" 
-                           target="_blank" 
-                           style="color: #c084a1; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
-                            📄 View Source
-                        </a>
-                    </div>
+            </div>
+            
+            <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
+                <span style="font-size: 1.5rem; min-width: 30px;">🤰</span>
+                <div style="flex: 1;">
+                    <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+                        Maternal age is a factor in having preterm birth - <strong>advanced maternal ages (40+)</strong> has a high risk factor for preterm birth.
+                    </p>
+                    <a href="https://pmc.ncbi.nlm.nih.gov/articles/PMC5791955/" 
+                       target="_blank" 
+                       style="color: #c084a1; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                        📄 View Source
+                    </a>
                 </div>
-                
-                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
-                    <span style="font-size: 1.5rem; min-width: 30px;">📈</span>
-                    <div style="flex: 1;">
-                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
-                            In 2022, preterm birth among <strong>Black women (14.6%)</strong> was about 50% higher than White (9.4%) or Hispanic women (10.1%) in the United States.
-                        </p>
-                        <a href="https://www.cdc.gov/maternal-infant-health/preterm-birth/index.html" 
-                           target="_blank" 
-                           style="color: #c084a1; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
-                            📄 View Source (CDC)
-                        </a>
-                    </div>
+            </div>
+            
+            <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
+                <span style="font-size: 1.5rem; min-width: 30px;">📈</span>
+                <div style="flex: 1;">
+                    <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+                        In 2022, preterm birth among <strong>Black women (14.6%)</strong> was about 50% higher than White (9.4%) or Hispanic women (10.1%) in the United States.
+                    </p>
+                    <a href="https://www.cdc.gov/maternal-infant-health/preterm-birth/index.html" 
+                       target="_blank" 
+                       style="color: #c084a1; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                        📄 View Source
+                    </a>
                 </div>
-                
-                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #c084a1; box-shadow: 0 2px 4px rgba(247, 196, 216, 0.2);">
+            </div>
+        </div>
+    </div>
+    
+    <!-- Utah-Specific Section -->
+    <div style="margin-top: 2rem; padding-top: 2rem; border-top: 3px solid #F7C4D8;">
+        <div style="display: grid; grid-template-columns: 400px 1fr; gap: 2rem;">
+            <!-- Utah Map -->
+            <div style="background: white; padding: 1.5rem; border-radius: 12px; border: 2px solid #F7C4D8; box-shadow: 0 2px 8px rgba(247, 196, 216, 0.3);">
+                <h3 style="font-size: 1.1rem; font-weight: 600; color: #6b6b6b; margin-bottom: 1rem; text-align: center;">Utah Location</h3>
+                <svg viewBox="0 0 960 600" style="width: 100%; height: auto;">
+                    <!-- Simplified US Map with Utah highlighted -->
+                    <rect x="700" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                    <rect x="500" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                    <rect x="300" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                    <rect x="100" y="120" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                    <rect x="700" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                    <rect x="500" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                    <!-- Utah highlighted in red (Mountain West region) -->
+                    <rect x="300" y="260" width="180" height="120" fill="#ef4444" stroke="#dc2626" stroke-width="3"/>
+                    <text x="390" y="325" text-anchor="middle" fill="white" font-size="24" font-weight="700">UTAH</text>
+                    <rect x="100" y="260" width="180" height="120" fill="#d1d5db" stroke="#9ca3af" stroke-width="1"/>
+                </svg>
+            </div>
+            
+            <!-- Utah Stats -->
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #ef4444; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
                     <span style="font-size: 1.5rem; min-width: 30px;">🏔️</span>
                     <div style="flex: 1;">
+                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0 0 0.5rem 0;">
+                            <strong>4,444 babies</strong> were born preterm in Utah in 2024. Utah ranks <strong>12th of 52</strong> (includes all states, DC, and Puerto Rico) for preterm birth with a rate of <strong>9.5%</strong>.
+                        </p>
+                        <a href="https://www.marchofdimes.org/peristats/reports/utah/report-card" 
+                           target="_blank" 
+                           style="color: #ef4444; font-size: 0.85rem; text-decoration: none; font-weight: 600; display: inline-flex; align-items: center; gap: 0.25rem;">
+                            📄 View Source
+                        </a>
+                    </div>
+                </div>
+                
+                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #ef4444; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
+                    <span style="font-size: 1.5rem; min-width: 30px;">⚠️</span>
+                    <div style="flex: 1;">
                         <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">
-                            <strong>How are the stats in Utah?</strong> This dashboard represents preterm birth data from <strong>2008 to 2012</strong> across Utah, analyzed by <strong>maternal age</strong>, <strong>race/ethnicity</strong>, and <strong>counties</strong> to identify trends and disparities specific to the state.
+                            Even though Utah is doing relatively well, <strong>1 in 10 Utah babies are born too early</strong> - but the risk isn't equal across all communities.
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #ef4444; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
+                    <span style="font-size: 1.5rem; min-width: 30px;">📍</span>
+                    <div style="flex: 1;">
+                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                            <strong>Where you live in Utah</strong> could affect your baby's chance of being born preterm.
+                        </p>
+                    </div>
+                </div>
+                
+                <div style="display: flex; align-items: start; gap: 1rem; background: white; padding: 1rem 1.5rem; border-radius: 8px; border-left: 4px solid #ef4444; box-shadow: 0 2px 4px rgba(239, 68, 68, 0.2);">
+                    <span style="font-size: 1.5rem; min-width: 30px;">📊</span>
+                    <div style="flex: 1;">
+                        <p style="color: #4a4a4a; font-size: 0.95rem; line-height: 1.6; margin: 0;">
+                            This dashboard represents preterm birth data from <strong>2008 to 2012</strong> across Utah, analyzed by <strong>maternal age</strong>, <strong>race/ethnicity</strong>, and <strong>counties</strong> to identify trends and disparities specific to the state.
                         </p>
                     </div>
                 </div>
             </div>
         </div>
+    </div>
+</div>
         <!-- Main Dashboard -->
         <div class="dashboard-main">
             <!-- Left Side - FIXED MAP -->
